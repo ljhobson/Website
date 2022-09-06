@@ -1,4 +1,5 @@
-console.log("You have successfully landed on my website");
+// Louis Hobson
+console.log("You have successfully landed on my website!");
 
 var canvas = document.getElementById("overlay");
 
