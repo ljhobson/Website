@@ -1,3 +1,2 @@
 # Website
-website
-read me
+This is a website
