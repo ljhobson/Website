@@ -1,0 +1,16 @@
+body {
+	margin: 0;
+}
+#wrapper {
+	font-family: Elephant;
+	margin: 10px;
+}
+.rainbow {
+	user-select: none;
+}
+#overlay {
+	position: fixed;
+	left: 0;
+	top: 0;
+	pointer-events: none;
+}
