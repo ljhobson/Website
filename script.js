@@ -75,9 +75,9 @@ function updateOverlay() {
 		}
 		var perc = Math.sin((frame+f.size)/FLAKE_SPIN);
 		if (f.size > 50) {
-			ctx.drawImage(snowflakeImage, 0, 0, 200, 200, f.x-f.size/2*perc, f.y - window.scrollY*f.size/200, f.size*perc, f.size);
+			ctx.drawImage(snowflakeImage, 0, 0, 200, 200, f.x-f.size/2*perc, f.y, f.size*perc, f.size);
 		} else {
-			bgx.drawImage(snowflakeImage, 0, 0, 200, 200, f.x-f.size/2*perc, f.y - window.scrollY*f.size/200, f.size*perc, f.size);
+			bgx.drawImage(snowflakeImage, 0, 0, 200, 200, f.x-f.size/2*perc, f.y, f.size*perc, f.size);
 		}
 	}
 	
