@@ -38,7 +38,18 @@ function getHeaders() {
 	}
 }
 
+function setColors() {
+	var paragraphs = document.getElementsByTagName("p");
+	var cols = ["#ff0","#0ff","#0f0"];
+	var shad = ["#f00","#00f","#00f","#f0f"];
+	for (var i = 0; i < paragraphs.length; i++) {
+		paragraphs[i].style.color = cols[i%cols.length];
+		paragraphs[i].style.textShadow = "2px 2px " + shad[i%shad.length];
+	}
+}
+
 getHeaders();
+setColors();
 setInterval(update, 40);
 
 

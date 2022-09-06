@@ -1,9 +1,14 @@
 body {
 	margin: 0;
+	background-image: url('img/background.jpg');
 }
 #wrapper {
 	font-family: Elephant;
 	margin: 10px;
+}
+p {
+	text-shadow: 2px 2px #000;
+	color: #fff;
 }
 .rainbow {
 	user-select: none;
