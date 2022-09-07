@@ -15,9 +15,13 @@ function rand(a, b) { // only deals with ints
 var mouse = {
 	x: undefined,
 	y: undefined,
+	xv: undefined,
+	yv: undefined
 };
 var mouseTrail = [];
 document.onmousemove = function(event) {
+	mouse.xv = event.clientX - mouse.x;
+	mouse.yv = event.clientY - mouse.y;
 	mouse.x = event.clientX;
 	mouse.y = event.clientY;
 }
@@ -89,7 +93,10 @@ function updateOverlay() {
 	}
 	for (var i = 0; i < mouseTrail.length; i++) {
 		mouseTrail[i].life += 0.01;
-		mouseTrail[i].y += mouseTrail[i].life;
+		//mouseTrail[i].y += mouseTrail[i].life;
+		// Velocity:
+		mouseTrail[i].x += mouseTrail[i].xv/10;
+		mouseTrail[i].y += mouseTrail[i].yv/10 + mouseTrail[i].life;
 		ctx.globalAlpha = 1-mouseTrail[i].life;
 		ctx.drawImage(trailEffect, mouseTrail[i].x, Math.floor(mouseTrail[i].y));
 		ctx.globalAlpha = 1;
