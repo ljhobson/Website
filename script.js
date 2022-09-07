@@ -26,6 +26,7 @@ document.onmousedown = function(event) {
 		x: -150,
 		y: mouse.y
 	});
+	flakes.push(new Flake());
 }
 var nyanCats = [];
 // OVERLAY CANVAS
