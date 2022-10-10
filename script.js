@@ -126,6 +126,10 @@ function update() { frame++;
 		var e = rainbows[i];
 		e.innerHTML = rainbowText(rainbowHeaders[i]);
 	}
+	
+	// default mouse movement
+	mouse.xv = 0;
+	mouse.yv = 0;
 }
 
 function rainbowText(text) {
