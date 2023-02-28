@@ -84,22 +84,22 @@ function matches(character, template) {
 		return !word.includes(character);
 	}
 	if (template === 'd') {
-		return word.includes(digit);
+		return digit.includes(character);
 	}
 	if (template === 'D') {
-		return !word.includes(digit);
+		return !digit.includes(character);
 	}
 	if (template === 'u') {
-		return word.includes(upper);
+		return upper.includes(character);
 	}
 	if (template === 'U') {
-		return !word.includes(upper);
+		return !upper.includes(character);
 	}
 	if (template === 'l') {
-		return word.includes(lower);
+		return lower.includes(character);
 	}
 	if (template === 'L') {
-		return !word.includes(lower);
+		return !lower.includes(character);
 	}
 	return character === template;
 }
