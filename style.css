@@ -2,6 +2,11 @@ body {
 	margin: 0;
 	background-image: url('img/background.jpg');
 	cursor: default;
+	color: #ff0;
+}
+#cube {
+	margin: auto;
+	display: block;
 }
 #wrapper {
 	font-family: Elephant;
@@ -11,10 +16,14 @@ p {
 	text-shadow: 2px 2px #000;
 	color: #fff;
 }
+
 .box {
 	background-color: #000;
 	padding: 10px;
 	margin: 5px 0;
+	border-radius: 5px;
+	width: 50%;
+	margin: auto;
 }
 .rainbow {
 	user-select: none;
@@ -32,6 +41,31 @@ p {
 	pointer-events: none;
 	z-index: -99;
 }
+.button {
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: #4CAF50;
+	color: #ffffff;
+	border-radius: 5px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 18px;
+	margin-top: 20px;
+	margin-bottom: 40px;
+}
 a {
 	color: #000;
+}
+
+.button {
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: #f0f00f;
+	color: #55ff11;
+	border-radius: 5px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 18px;
+	margin-top: 20px;
+	margin-bottom: 40px;
 }

@@ -9,6 +9,7 @@ body {
 	background-color: #ffffff;
 	padding: 20px;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+	position: relative;
 }
 #header h1 {
 	margin: 0;
@@ -19,6 +20,8 @@ body {
 	max-width: 800px;
 	margin: 0 auto;
 	padding: 20px;
+	background-color: #fff5bb;
+	background-image: repeating-linear-gradient(#fff5bb 0px, #fff5bb 48px, #999955 49px);
 }
 h2 {
 	font-size: 24px;
