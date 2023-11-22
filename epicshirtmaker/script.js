@@ -188,18 +188,33 @@ logoImage.src = "icon.png";
 
 function createExport() {
 	var pdf = new jsPDF();
-	pdf.setFont('Times New Roman');
-	pdf.setFontSize('12');
 	var pageHeight = pdf.internal.pageSize.height;
 	var pageWidth = pdf.internal.pageSize.width;
-	var posY = 16;
-	var gapY = 12;
-	pdf.line(5, posY-gapY+5, pageWidth-5, posY-gapY+5);
-	pdf.text(20, posY, "");
-	pdf.addImage(logoImage, 'JPEG', 0, 0);
+	var margin = 10;
+	var pageNumber = 0;
+	function drawHeader() {
+		pageNumber++;
+		pdf.setTextColor(0,0,0);
+		pdf.text(margin, margin, "Tech Pack (" + pageNumber + ")");
+		pdf.setTextColor(255,0,0);
+		pdf.text(pageWidth-margin - pdf.getTextWidth("Confidential Property of Louis Hobson"), margin, "Confidential Property of Louis Hobson");
+		pdf.line(margin, margin+2, pageWidth-margin, margin+2);
+		pdf.setTextColor(0,0,0);
+	}
+	//pdf.addImage(logoImage, 'JPEG', 0, 0);
+	
+	pdf.setFont('Times New Roman');
+	pdf.setFontSize('8');
+	
+	drawHeader();
+	
+	pdf.setFont('Times New Roman');
+	pdf.setFontSize('8');
+	
 	// do stuff
 	pdf.addPage();
 	
+	drawHeader();
 	
 	pdf.save("epicshirtmaker_test.pdf");
 }
