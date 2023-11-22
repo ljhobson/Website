@@ -188,15 +188,15 @@ logoImage.src = "icon.png";
 
 function createExport() {
 	var pdf = new jsPDF();
-	pdf.setFont('Courier');
+	pdf.setFont('Times New Roman');
 	pdf.setFontSize('12');
 	var pageHeight = pdf.internal.pageSize.height;
 	var pageWidth = pdf.internal.pageSize.width;
 	var posY = 16;
 	var gapY = 12;
 	pdf.line(5, posY-gapY+5, pageWidth-5, posY-gapY+5);
-	pdf.text(20, posY, "some  test writing!-=!@#$%^&*()_[][  ]]FRGHJ");
-	pdf.addImage(logoImage, 'JPEG', Math.floor(pageWidth/2)-8, posY-4);
+	pdf.text(20, posY, "");
+	pdf.addImage(logoImage, 'JPEG', 0, 0);
 	// do stuff
 	pdf.addPage();
 	
