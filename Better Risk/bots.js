@@ -827,6 +827,7 @@ set last 0;
 @FORTIFYING: {
 	
 };`;
+	localStorage.editor = editor.value;
 }
 
 editor.oninput = function(event) {
