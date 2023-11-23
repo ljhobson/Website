@@ -1,0 +1,138 @@
+LIST_gapToken: " ";
+LIST_new: {
+	input LIST_raw;
+	LIST_f: "[";
+	LIST_rawLen: #LIST_raw;
+	for 0 LIST_rawLen 1 { input LIST_i;
+		if LIST_raw*LIST_i == "," {
+			LIST_f: LIST_f+ LIST_gapToken;
+		}; else {
+			LIST_f: LIST_f+ LIST_raw*LIST_i;
+		};
+	};
+	LIST_f: LIST_f+ "]";
+	return LIST_f;
+};
+LIST_length: {
+	input LIST_f;
+	if LIST_f == "[]" {
+		return 0;
+	}; else {
+		LIST_rawLen: #LIST_f;
+		LIST_count: 1;
+		for 0 LIST_rawLen 1 { input LIST_i;
+			if LIST_f*LIST_i == LIST_gapToken {
+				LIST_count: LIST_count + 1;
+			};
+		};
+		return LIST_count;
+	};
+};
+LIST_item: {
+	input LIST_f LIST_stopI;
+	if LIST_f == "[]" {
+		return -1;
+	}; else {
+		LIST_count: 0;
+		LIST_value: "";
+		while LIST_count <= LIST_stopI & LIST_f*LIST_i != "]" { input LIST_i;
+			if LIST_f*LIST_i == LIST_gapToken {
+				LIST_count: LIST_count + 1;
+				if LIST_count <= LIST_stopI {
+					LIST_value: "";
+				};
+			}; else {
+				LIST_value: LIST_value + LIST_f*LIST_i;
+			};
+			set LIST_i LIST_i+1;
+		};
+		if LIST_f*LIST_i == "]" & LIST_count < LIST_stopI {
+			LIST_value: -1;
+		};
+		return LIST_value;
+	};
+};
+LIST_indexOf: {
+	input LIST_f LIST_element;
+	LIST_count: 0;
+	LIST_position: -1;
+	LIST_value: "";
+	LIST_i: 1;
+	while !(LIST_value == LIST_element & LIST_f*LIST_i == LIST_gapToken) & LIST_f*LIST_i != "]" {
+		if LIST_f*LIST_i == LIST_gapToken {
+			LIST_value: "";
+			LIST_count: LIST_count + 1;
+		}; else {
+			LIST_value: LIST_value + LIST_f*LIST_i;
+		};
+		LIST_i: LIST_i+1;
+	};
+	if LIST_value == LIST_element {
+		LIST_position: LIST_count;
+	};
+	return LIST_position;
+};
+LIST_append: {
+	input LIST_f LIST_element;
+	return LIST_f%1 + LIST_gapToken + LIST_element + "]";
+};
+LIST_pop: {
+	input LIST_f;
+	LIST_i: #LIST_f-2;
+	while LIST_f*LIST_i != "[" & LIST_f*LIST_i != LIST_gapToken {
+		set LIST_i LIST_i-1;
+	};
+	if LIST_f*LIST_i == "[" {
+		return "[]";
+	}; else {
+		return LIST_f%(#LIST_f-LIST_i) + "]";
+	};
+};
+LIST_unshift: {
+	input LIST_f LIST_element;
+	return "[" + LIST_element + LIST_gapToken + 1%LIST_f;
+};
+LIST_shift: {
+	input LIST_f;
+	LIST_i: 1;
+	while LIST_f*LIST_i != "]" & LIST_f*LIST_i != LIST_gapToken {
+		set LIST_i LIST_i+1;
+	};
+	if LIST_f*LIST_i == "]" {
+		return "[]";
+	}; else {
+		return "[" + (LIST_i+1)%LIST_f;
+	};
+};
+LIST_setItem: {
+	input LIST_f LIST_stopI LIST_element;
+	if LIST_stopI != 0 {
+		LIST_count: 0;
+		while LIST_count < LIST_stopI & LIST_f*LIST_i != "]" { input LIST_i;
+			if LIST_f*LIST_i == LIST_gapToken {
+				set LIST_count LIST_count+1;
+			};
+			set LIST_i LIST_i+1;
+		};
+		LIST_start: LIST_i;
+	}; else {
+		LIST_start: 1;
+	};
+	while LIST_f*LIST_i != LIST_gapToken & LIST_f*LIST_i != "]" {
+		set LIST_i LIST_i+1;
+	};
+	return LIST_f%(#LIST_f-LIST_start) + LIST_element + (LIST_i)%LIST_f;
+};
+LIST_help: {
+	print "LIST_";
+	print "  help";
+	print "  new (raw)";
+	print "  length (base)";
+	print "  item (base) (index)";
+	print "  indexOf (base) (item)";
+	print "  append (base) (item)";
+	print "  pop (base)";
+	print "  unshift (base) (item)";
+	print " shift (base)";
+	print "  setItem (base) (index) (item)";
+};

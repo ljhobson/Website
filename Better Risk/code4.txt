@@ -1,0 +1,42 @@
+length: {
+	input string;
+	x: 0;
+	while string*x != 0 {
+		x: x + 1;
+	};
+	return x;
+};
+getItem: {
+	input list, item;
+	commas: 0;
+	current: "";
+	set i 0;
+	set l [length list];
+	set done 0;
+	while i < l | 1-done {
+		//print i;
+		if list*i == "," | list*i == "0" {
+			if commas == item {
+				set done 1;
+				return current;
+			};
+			commas: commas + 1;
+			set i i+2;
+		}; elseif commas == item {
+			current: current + list*i;
+		};
+		set i i+1;
+	};
+	if 1-done {
+		return current;
+	};
+};
+
+set myList index
+"Apple, Bag, Dog, Cat, Animal, Theif"
+5;
+print [getItem myList index];
+
+print "<a style='color:red;'>Hello</a>";
+
+print "<button style='color:red;'>HI</button>";

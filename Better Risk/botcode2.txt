@@ -1,0 +1,91 @@
+Name: "My Bot";
+// same as
+Name: {
+	return "My Bot";
+};
+Initial: {
+	insert s;
+	input owners armies conns amount;
+	
+	Place
+	
+	
+	derail s;
+};
+
+Placing: {
+	insert s;
+	input owners armies conns amount;
+	Place 4 1; //places 1 troop on id = 4 (returns 1 if error else 0)
+	derail s;
+};
+
+Attacking: {
+	
+};
+
+Fortifying: {
+	
+};
+
+//"
+	when creating functions
+"
+myfunc: {
+	insert s;
+	input param;
+	
+	//code here
+	return 1;
+	
+	derail s;
+}
+
+if () {
+	
+}
+
+
+
+call myfunc 2;
+call {
+	//code goes in here
+}; // ; is an end to the call keyw
+
+variable: 0;
+
+
+while {
+	return 0;
+};
+
+x y z:
+
+//chain
+set x y z to 2 4 6;
+//chain
+if () {} else if () {} else {};
+//" {} don't execute by themselves, { instead returns the index number for itself of type function/ codeblock.
+the if keyw executes it
+"
+
+IF: { // insert s;
+	input conditionAns code;
+	if (conditionAns) {
+		call code;
+		output retVal; //sets variable retVal to the return value from the function code
+		return retVal;
+	} //derail s;
+};
+
+call IF (1==1) {
+	return 4;
+}; // I need to come up with a way to define functions so you don't need to use the call yeyw to execute them!
+
+auto: {
+	call auto; // nope auto is not defined yet.
+} // now auto is defined
+
+tag thisline;
+//infinite loop
+goto thisline;

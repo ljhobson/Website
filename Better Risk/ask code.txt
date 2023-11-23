@@ -1,0 +1,10 @@
+// iLIB CODE
+code: "getVar=function(name,names,values){if(name===\\'iLIB_ask\\'){return {type:\\'str\\',value:prompt(getVar(\\'iLIB_question\\',variableNames,variableValues).value)};}else if(names.includes(name)){return values[names.indexOf(name)];}else{return{type:\\'num\\',value:0};}};functions.push(\\'iLIB_program\\');functions.push(\\'iLIB_question\\');functions.push(\\'iLIB_ask\\');tL=tokenize(editor.value);overlay.innerHTML=highlight(editor.value,tL);output.innerHTML=\\'<span style=\\\\\\'color:blue\\\\\\'> > iLIB_program</span><br>\\';evaluateTokens(tL,getVar(\\'iLIB_program\\',variableNames,variableValues).value+1);output.innerHTML+=\\'<span style=\\\\\\'color:blue\\\\\\'> > iLIB_END </span>\\'+returnValue.value+\\'<br>\\';";
+print "<a style='color:blue'><br> > Welcome to iLIB<br> > <button onclick=\"eval('"+code+"')\">Run in iLIB</button></a>";
+// iLIB END<br>
+
+iLIB_program: {
+	print "running!!!";
+	iLIB_question: "What is your name?";
+	print "Hi there " + iLIB_ask;
+};
