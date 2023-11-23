@@ -756,6 +756,77 @@ function changeFont(font) {
 
 if (localStorage.editor !== undefined) {
 	editor.value = localStorage.editor;
+} else {
+	editor.value = `@NAME: "Communist 2";
+@COLOUR: "#0ff";
+set mn pns cns cr rn rv me 0 0 0 0 0 0 0;
+set last 0;
+@SETUPINFO: {
+	@MaximumIterations: 100000;
+	LIST_gapToken: "_";
+	input mn pns cns cr rn rv me;
+	pns: [LIST_new pns];
+	myName: [LIST_item pns me];
+	print myName + " is here!";
+	
+	last: 0;
+};
+@INITIAL: {
+	input owners armies toPlace;
+	owners: [LIST_new owners];
+	armies: [LIST_new armies];
+	
+	iown: [LIST_new [@OWNED me]];
+	ownlen: [LIST_length iown];
+	initial: last;
+	for initial initial+toPlace 1 { input x;
+		c: [LIST_item iown x%ownlen];
+		call @PLACE c 1;
+		last: x+1;
+	};
+};
+@PLACING: {
+	input owners armies toPlace;
+	call @INITIAL owners armies toPlace;
+};
+@ATTACKING: {
+	input owners armies toPlace;
+	owners: [LIST_new owners];
+	armies: [LIST_new armies];
+	
+	iown: [LIST_new [@OWNED me]];
+	ownlen: [LIST_length iown];
+	
+	for 0 ownlen 1 { input x;
+		c: [LIST_item iown x];
+		amnt: [LIST_item armies c];
+		if amnt > 5 {
+			// search for victim
+			cons: [LIST_new [@CONNECTIONS c]];
+			inloop: 1;
+			y: 0;
+			while inloop {
+				thiscon: [LIST_item cons y];
+				reply: [LIST_indexOf [LIST_new [@OWNED me]] thiscon];
+				if -1 == reply {
+					//print "found one " + c + " -> " + thiscon;
+					inloop: 0;
+					if [@ATTACK c thiscon 1] {
+						call @PLACE c 999;
+					};
+				};
+				y: y+1;
+				if [LIST_length cons] <= y {
+					inloop: 0;
+				};
+			};
+		};
+	};
+	print "COMPLETED";
+};
+@FORTIFYING: {
+	
+};`;
 }
 
 editor.oninput = function(event) {

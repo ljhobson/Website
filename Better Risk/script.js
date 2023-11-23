@@ -247,6 +247,8 @@ function load() {
 		continents = JSON.parse(localStorage.continents);
 		bonusGroups.items = JSON.parse(localStorage.bonusGroupsItems);
 		bonusValues = JSON.parse(localStorage.bonusValues);
+	} else {
+		
 	}
 }
 load();
