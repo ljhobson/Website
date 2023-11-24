@@ -99,8 +99,6 @@ function update() {
 		rotX = -90;
 	}
 	
-	console.log(rotZ);
-	
 	resetBoard();
 	rotateBoard(board);
 	renderBoard(board); // get selected
