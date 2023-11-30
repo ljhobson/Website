@@ -1,0 +1,70 @@
+// Grudger Bot "
+" Created by Louis
+
+//"
+Types of litterals:
+	-> String
+	-> Number
+	-> Function
+	
+	-> List
+"""""""""""""""""""
+list: [2 3 4];
+""
+
+Name: "Grudger";
+
+Initial: { // -> armies, connections, owners, placing amnt
+	input placing owners armies conns;
+	goto token;
+	tag token;
+	insert s;
+	age: 17;
+	remove placing owners armies conns;
+	return 1=2;
+	break;
+	end s; // deletes the age variable
+	chop s;
+	derail s;
+}
+
+Placing: {
+	if (1) {
+		
+	} else if (1) {
+		
+	} else {
+		
+	}
+}
+
+Attacking: {
+	while (1) {
+		
+	}
+	for (0 50 1) {
+		input i;
+	}
+}
+
+Fortifying:
+
+add: {
+	input a b;
+	a+b;
+	end a b;
+}
+
+print add 2 3;
+
+
+
+
+
+
+
+
+
+
+
+

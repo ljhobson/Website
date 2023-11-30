@@ -1,0 +1,48 @@
+// iLIB CODE<a style='font-size:30px'>
+code: "getVar=function(name,names,values){if(name===\\'iLIB_ask\\'){return {type:\\'str\\',value:prompt(getVar(\\'iLIB_question\\',variableNames,variableValues).value)};}else if(names.includes(name)){return values[names.indexOf(name)];}else{return{type:\\'num\\',value:0};}};functions.push(\\'iLIB_program\\');functions.push(\\'iLIB_question\\');functions.push(\\'iLIB_ask\\');tL=tokenize(editor.value);overlay.innerHTML=highlight(editor.value,tL);output.innerHTML=\\'<span style=\\\\\\'color:blue\\\\\\'> > iLIB_program</span><br>\\';evaluateTokens(tL,getVar(\\'iLIB_program\\',variableNames,variableValues).value+1);output.innerHTML+=\\'<span style=\\\\\\'color:blue\\\\\\'> > iLIB_END </span>\\'+returnValue.value+\\'<br>\\';";
+print "<a style='color:blue'><br> > Welcome to iLIB<br> > <button onclick=\"eval('"+code+"')\">Run in iLIB</button></a>";
+// iLIB END<br>
+
+iLIB_program: {
+	ask: {
+		input iLIB_question;
+		return iLIB_ask;
+	};
+	main: {
+		stringO: [ask "Enter a sentence:"];
+		
+		charO: [ask "Replacing what?"];
+		charN: [ask "With what?"];
+		
+		stringN: [replace stringO charO charN];
+		
+		print stringN;
+	};
+	call main;
+};
+
+length: {
+	input str1;
+	set i 0;
+	while str1*i != "0" {
+		set i i+1;
+	};
+	return i;
+};
+replace: {
+	input str ch1 ch2;
+	set newStr "";
+	for 0 [length str] 1 { input x;
+		set letter str*x;
+		if letter == ch1 {
+			set newStr newStr + ch2;
+		}; else {
+			set newStr newStr + letter;
+		};
+	};
+	return newStr;
+};
+
+
+
+

@@ -91,7 +91,7 @@ function update() {
 		rotX += rotXV;
 	}
 	if (rotZ < 0) {
-		rotZ += 360;
+		rotZ = (rotZ + (360 * 69)) % 360; // bug fix, thnx steve
 	}
 	if (rotX > 0) {
 		rotX = 0;

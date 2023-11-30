@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<head>
+	<title>Risk Online - Bot Editor</title>
+	<script src="bots.js" defer></script>
+	<link src="fixedsys.ttf" rel="stylesheet">
+	<style>
+		@font-face {
+			font-family: fixedsys;
+			src: url('fixedsys.ttf');
+		}
+		body {
+			margin: 0;
+			tab-size: 4;
+			background-color: #000;
+		}
+		#editor {
+			position: fixed;
+			left: 0;
+			top: 40px;
+			display: block;
+			outline: none;
+			border: none;
+			background-color: #222;
+			color: transparent;
+			resize: horizontal;
+			margin: 0;
+			padding: 0;
+			
+			caret-color: #eee;
+			
+			-webkit-font-smoothing: none;
+			font-size: 32px;
+			font-family: fixedsys;
+			font-weight: lighter;
+		}
+		#header {
+			display: block;
+			position: fixed;
+			left: 0;
+			top: 0;
+			width: 100%;
+			font-family: Elephant;
+			height: 40px;
+			background-color: #000;
+			color: #00f;
+			font-size: 32px;
+			padding: 0 0 0 8px;
+			z-index: 100;
+		}
+		#underlay {
+			position: fixed;
+			left: 0;
+			top: 40px;
+			display: block;
+			outline: none;
+			background-color: none;
+			color: none;
+			margin: 0;
+			padding: 0px;
+			
+			white-space: pre-wrap;
+			overflow-wrap: break-word;
+			
+			-moz-user-select: -moz-none;
+			-khtml-user-select: none;
+			-webkit-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+			pointer-events: none;
+			
+			-webkit-font-smoothing: none;
+			font-size: 32px;
+			font-family: fixedsys;
+			font-weight: lighter;
+		}
+		#overlay {
+			position: fixed;
+			left: 0;
+			top: 40px;
+			display: block;
+			outline: none;
+			background-color: none;
+			color: #999;
+			margin: 0;
+			padding: 0px;
+			
+			white-space: pre-wrap;
+			overflow-wrap: break-word;
+			
+			-moz-user-select: -moz-none;
+			-khtml-user-select: none;
+			-webkit-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+			pointer-events: none;
+			
+			-webkit-font-smoothing: none;
+			font-size: 32px;
+			font-family: fixedsys;
+			font-weight: lighter;
+		}
+		#output {
+			position: fixed;
+			left: 0;
+			top: 40px;
+			display: block;
+			outline: none;
+			background-color: #111;
+			color: #eee;
+			margin: 0;
+			padding: 0px;
+			
+			white-space: pre-wrap;
+			overflow: auto;
+			/*
+			-moz-user-select: -moz-none;
+			-khtml-user-select: none;
+			-webkit-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+			pointer-events: none;
+			*/
+			-webkit-font-smoothing: none;
+			font-size: 32px;
+			font-family: fixedsys;
+			font-weight: lighter;
+		}
+		button {
+			display: block-inline;
+			outline: none;
+			font-size: 32px;
+			font-family: fixedsys;
+			font-weight: lighter;
+			height: 40px;
+			background-color: #ccc;
+			color: #333;
+			font-size: 32px;
+			padding: 0 0 4 4px;
+			z-index: 100;
+		}
+		.run {
+			position: fixed;
+			right: 0;
+			top: 0;
+		}
+		button:hover {
+			cursor: help;
+			color: #0b0;
+		}
+	</style>
+</head>
+<body style="margin:0;">
+	<div id="header">Bot Editor<button class="run" onclick="run()">Run</button></div>
+	<div id="output"></div>
+	<div id="underlay"></div>
+	<textarea id="editor" spellcheck="false"></textarea>
+	<div id="overlay"></div>
+<body/>
+</body>
+
+

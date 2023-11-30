@@ -1,0 +1,28 @@
+//"set i 0;
+
+while i < 10 {;
+	if i % 2 {
+		print i + " is odd";
+	}; else {
+		print i + " is even";
+	};
+	
+	set i i+1;
+};"
+
+name age gender: "Louis" 17 "M";
+
+for 0 3 1 {
+	input x;
+	if (x == 1) {
+		print name;
+	};
+	if (x == 2) {
+		print age;
+	};
+	if (x == 3) {
+		print gender;
+	};
+};
+
+
