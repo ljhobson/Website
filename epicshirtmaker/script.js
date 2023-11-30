@@ -201,6 +201,80 @@ function createExport() {
 		pdf.line(margin, margin+2, pageWidth-margin, margin+2);
 		pdf.setTextColor(0,0,0);
 	}
+	function drawTable(x, y, r, c, content, width, gapH, alignC, alignR) {
+		if (width === undefined) {
+			width = pageWidth-2*x;
+		}
+		if (gapH === undefined) {
+			gapH = gapH = 8;
+		}
+		if (alignC === undefined) {
+			alignC = false;
+		}
+		if (alignR === undefined) {
+			alignR = false;
+		}
+		// fill table
+		for (var i = 0; i < r; i++) {
+			if (i % 2 === 0) {
+				pdf.setFillColor("#eec");
+			} else {
+				pdf.setFillColor("#e0e0e0");
+			}
+			pdf.rect(x, y + i*gapH, width, gapH, 'F')
+		}
+		// end fill
+		for (var i = 0; i < r+1; i++) {
+			pdf.line(x, y + i*gapH, x+width, y + i*gapH);
+		}
+		
+		var widthsList = [];
+		var totalWidth = 0;
+		for (var i = 0; i < content.length; i++) {
+			var column = content[i];
+			var maxWidth = 0;
+			for (var j = 0; j < column.length; j++) {
+				var text = String(column[j]);
+				maxWidth = Math.max(maxWidth, pdf.getTextWidth(text));
+			}
+			totalWidth += maxWidth;
+			widthsList.push(maxWidth);
+		}
+		var textGap = 0.5 * (width - totalWidth) / c;
+		
+		var height = r*gapH;
+		var gapOffset = 0;
+		for (var i = 0; i < c+1; i++) {
+			var gapW = width / c;
+			pdf.line(x + gapOffset, y, x + gapOffset, y + height);
+			gapOffset += widthsList[i] + 2*textGap;
+		}
+		
+		gapOffset = 1;
+		for (var i = 0; i < content.length; i++) {
+			var column = content[i];
+			if (i === 0 && alignC) {
+				pdf.setFontType("bold");
+				for (var j = 0; j < column.length; j++) {
+					var text = String(column[j]);
+					pdf.text(x + gapOffset + (widthsList[i] + textGap*2 - pdf.getTextWidth(text)) - 2, y + j*gapH + 0.5*(gapH + pdf.getTextDimensions(text).h), text);
+				}
+				pdf.setFontType("normal");
+			} else {
+				for (var j = 0; j < column.length; j++) {
+					var text = String(column[j]);
+					if (j === 0 && alignR) {
+						pdf.setFontType("bold");
+						pdf.text(x + gapOffset + (widthsList[i] + textGap*2 - pdf.getTextWidth(text))/2 - 1, y + j*gapH + 0.5*(gapH + pdf.getTextDimensions(text).h), text);
+						pdf.setFontType("normal");
+					} else {
+						pdf.text(x + gapOffset, y + j*gapH + 0.5*(gapH + pdf.getTextDimensions(text).h), text);
+					}
+				}
+			}
+			gapOffset += widthsList[i] + textGap*2;
+		}
+	}
 	//pdf.addImage(logoImage, 'JPEG', 0, 0);
 	
 	pdf.setFont('Times New Roman');
@@ -211,7 +285,21 @@ function createExport() {
 	pdf.setFont('Times New Roman');
 	pdf.setFontSize('8');
 	
-	// do stuff
+	var labels = ["Item", "Fabric", "Composition", "Weight", "Washing", "Fit / Length"];
+	/* capatilize them
+	for (var i = 0; i < labels.length; i++) {
+		labels[i] = labels[i].toUpperCase();
+	}
+	*/
+	var labels2 = ["Cool Shirt", "Cotton Canvas", "100% Cotton", "270 GSM", "Garmet Wash", "One Size Fits All"];
+	
+	render(true);
+	drawTable(pageWidth-100-margin, margin + 18, labels.length, 2, [labels, labels2], 100, 6, true, false);
+	
+	
+	pdf.addImage(canvas.toDataURL("image/png"), 'PNG', 0, 0, 100, 100);
+	
+	// new page
 	pdf.addPage();
 	
 	drawHeader();
