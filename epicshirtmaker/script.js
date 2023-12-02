@@ -78,12 +78,80 @@ function drawShirt(shirt, x, y, preview) {
 		ctx.fill();
 	}
 	ctx.stroke();
+	
+	if (preview) { // extra detail
+		var neckWidth = 10;
+		ctx.beginPath();
+		ctx.lineWidth = 1;
+		for (var i = topMost; i > 0; i--) {
+			
+			var vec1 = addVecs(1, shirt[i-1], -1, shirt[i]);
+			var vec2 = addVecs(1, shirt[i+1], -1, shirt[i]);
+			
+			vec1 = addVecs(1/vecSize(vec1), vec1, 0, [0, 0]);
+			vec2 = addVecs(1/vecSize(vec2), vec2, 0, [0, 0]);
+			
+			var dot = dotProd(vec1, vec2);
+			var det = determ(vec1, vec2);
+			var angle = Math.atan2(det, dot);
+			
+			console.log(i, angle);
+			var newPoint;
+			if (angle < 0) {
+				newPoint = addVecs(1, vec1, 1, vec2);
+			} else {
+				newPoint = addVecs(-1, vec1, -1, vec2);
+			}
+			
+			newPoint = addVecs(1, shirt[i], neckWidth/vecSize(newPoint), newPoint);
+			ctx.lineTo(x - newPoint[0], y + newPoint[1]);
+		}
+		
+		// flat v neck end
+		ctx.lineTo(x - shirt[0][0] - neckWidth/2, y + shirt[0][1] + neckWidth);
+		ctx.lineTo(x - shirt[0][0] + neckWidth/2, y + shirt[0][1] + neckWidth);
+		
+		for (var i = 1; i <= topMost; i++) {
+			
+			var vec1 = addVecs(1, shirt[i-1], -1, shirt[i]);
+			var vec2 = addVecs(1, shirt[i+1], -1, shirt[i]);
+			
+			vec1 = addVecs(1/vecSize(vec1), vec1, 0, [0, 0]);
+			vec2 = addVecs(1/vecSize(vec2), vec2, 0, [0, 0]);
+			
+			var dot = dotProd(vec1, vec2);
+			var det = determ(vec1, vec2);
+			var angle = Math.atan2(det, dot);
+			
+			console.log(i, angle);
+			var newPoint;
+			if (angle < 0) {
+				newPoint = addVecs(1, vec1, 1, vec2);
+			} else {
+				newPoint = addVecs(-1, vec1, -1, vec2);
+			}
+			
+			newPoint = addVecs(1, shirt[i], neckWidth/vecSize(newPoint), newPoint);
+			ctx.lineTo(x + newPoint[0], y + newPoint[1]);
+			
+			//ctx.fillStyle = "#f00";
+			//ctx.fillRect(x + newPoint[0], y + newPoint[1], 4, 4);
+		}
+		ctx.stroke();
+	}
 }
 
 function render(preview) {
 	fitCanvas();
 	
-	drawShirt(shirt, canvas.width/2, canvas.height/2, preview);
+	var scale = 1 + Number(preview === true);
+	
+	var previewShirt = [];
+	for (var i = 0; i < shirt.length; i++) {
+		previewShirt.push([scale * shirt[i][0], scale * shirt[i][1]]);
+	}
+	
+	drawShirt(previewShirt, canvas.width/2, canvas.height/2, preview);
 }
 
 
@@ -148,6 +216,22 @@ function distance(x1, y1, x2, y2) {
 	dx = x2-x1;
 	dy = y2-y1;
 	return dx*dx + dy*dy;
+}
+
+function addVecs(sa, a, sb, b) {
+	return [sa*a[0] + sb*b[0], sa*a[1] + sb*b[1]];
+}
+
+function dotProd(a, b) {
+	return a[0]*b[0] + a[1]*b[1];
+}
+
+function determ(a, b) {
+	return a[0]*b[1] - a[1]*b[0];
+}
+
+function vecSize(vec) {
+	return Math.sqrt(vec[0]*vec[0] + vec[1]*vec[1]);
 }
 
 document.onkeydown = function(event) {
