@@ -8,6 +8,7 @@ function fitCanvas() {
 }
 
 function drawShirt(shirt, x, y, preview, colScale) {
+	var neckWidth = 10;
 	if (shirt.length == 0) {
 		return;
 	}
@@ -47,6 +48,12 @@ function drawShirt(shirt, x, y, preview, colScale) {
 		ctx.fill();
 		ctx.stroke();
 		
+		// draw the back collar
+		ctx.beginPath();
+		ctx.moveTo(x + shirt[topMost][0], y + shirt[topMost][1]+neckWidth);
+		ctx.quadraticCurveTo(x, y + shirt[topMost][1] + neckWidth + 15, x - shirt[topMost][0], y + shirt[topMost][1] + neckWidth);
+		ctx.stroke();
+		
 	} else {
 		ctx.fillStyle = "#bbb";
 		for (var i = 0; i < shirt.length; i++) {
@@ -83,7 +90,6 @@ function drawShirt(shirt, x, y, preview, colScale) {
 	ctx.stroke();
 	
 	if (preview) { // extra detail
-		var neckWidth = 10;
 		ctx.beginPath();
 		ctx.lineWidth = 1;
 		for (var i = topMost; i > 0; i--) {
