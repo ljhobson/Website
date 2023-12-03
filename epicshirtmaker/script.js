@@ -148,7 +148,6 @@ function drawShirt(shirt, x, y, preview, colScale) {
 
 function render(preview) {
 	fitCanvas();
-	preview = true;
 	var scale = 1 + 1*Number(preview === true);
 	
 	var previewShirt = [];
