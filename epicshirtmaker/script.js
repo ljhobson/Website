@@ -158,7 +158,7 @@ function render(preview) {
 	
 	var previewShirt = [];
 	for (var i = 0; i < shirt.length; i++) {
-		previewShirt.push([scale * shirt[i][0], scale * shirt[i][1]]);
+		previewShirt.push([1 * shirt[i][0], 1 * shirt[i][1]]);
 	}
 	
 	drawShirt(previewShirt, canvas.width/2, canvas.height/2, preview, scale);
@@ -269,7 +269,7 @@ function save() {
 
 function load() {
 	if (localStorage.shirt === undefined) {
-		localStorage.shirt = "[[0,-15],[5,-38],[10,-36],[15,-42],[20,-57],[37,-50],[54,-39],[45,-13],[32,-21],[30,15],[30,35],[30,37],[0,45]]";
+		localStorage.shirt = "[[0,-30],[10,-76],[20,-72],[30,-84],[40,-114],[74,-100],[108,-78],[90,-26],[64,-42],[60,30],[60,70],[60,74],[0,90]]";
 	}
 	shirt = JSON.parse(localStorage.shirt);
 }
