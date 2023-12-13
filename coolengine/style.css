@@ -1,0 +1,77 @@
+body {
+	margin: 0;
+}
+
+#header {
+	background-color: #444;
+	padding-left: 15px;
+}
+
+#canvas {
+	
+}
+
+#code {
+	margin: 0;
+	border: 0;
+	border: none;
+	outline: none;
+	resize: vertical;
+	
+	tab-size: 4;
+	background-color: #001b37;
+	color: transparent;
+	caret-color: #eee;
+	
+	font-size: 12px;
+	font-family: monospace;
+	font-weight: lighter;
+}
+
+#highlight {
+	margin: 0;
+	border: 0;
+	border: none;
+	outline: none;
+	resize: vertical;
+	
+	tab-size: 4;
+	background-color: none;
+	color: #999;
+	
+	display: block;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+	
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	-webkit-font-smoothing: none;
+	
+	font-size: 12px;
+	font-family: monospace;
+	font-weight: normal;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
