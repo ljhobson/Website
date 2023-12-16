@@ -7,16 +7,26 @@ function fitCanvas() {
 	canvas.height = Math.min(window.innerHeight-50, 500);
 }
 
-function drawShirt(shirt, x, y, preview, colScale) {
+function drawShirt(shirtRaw, x, y, preview, colScale, override) {
 	var neckWidth = 10;
-	if (shirt.length == 0) {
+	if (shirtRaw.length == 0) {
 		return;
-	}
-	if (preview === undefined) {
-		preview = 0;
 	}
 	if (colScale === undefined) {
 		colScale = 1;
+	}
+	var shirt = [];
+	if (override !== undefined) {
+		for (var i = 0; i < shirtRaw.length; i++) {
+			shirt.push([override*shirtRaw[i][0], override*shirtRaw[i][1]]);
+		}
+		neckWidth *= override;
+		colScale *= override;
+	} else {
+		shirt = shirtRaw;
+	}
+	if (preview === undefined) {
+		preview = 0;
 	}
 	
 	if (preview) { // draw back
@@ -152,7 +162,7 @@ function drawShirt(shirt, x, y, preview, colScale) {
 	}
 }
 
-function render(preview) {
+function render(preview, override) {
 	fitCanvas();
 	var scale = 1 + 1*Number(preview === true);
 	
@@ -161,7 +171,7 @@ function render(preview) {
 		previewShirt.push([1 * shirt[i][0], 1 * shirt[i][1]]);
 	}
 	
-	drawShirt(previewShirt, canvas.width/2, canvas.height/2, preview, scale);
+	drawShirt(previewShirt, canvas.width/2, canvas.height/2, preview, scale, override);
 }
 
 
@@ -376,6 +386,19 @@ function createExport() {
 	
 	drawHeader();
 	
+	// draw shirt name
+	var shirtName = "Cool Shirt Name Regular Fit";
+	var shirtDesc = "Cool shirts INC";
+	pdf.setFont('Times New Roman');
+	pdf.setFontSize('24');
+	pdf.setFontType("normal");
+	pdf.text((pageWidth - pdf.getTextWidth(shirtName))/2, margin+18, shirtName);
+	pdf.setFontSize('8');
+	pdf.setFontType("normal");
+	pdf.text((pageWidth - pdf.getTextWidth(shirtDesc))/2, margin+22, shirtDesc);
+	pdf.setFontType("normal");
+	
+	
 	pdf.setFont('Times New Roman');
 	pdf.setFontSize('8');
 	
@@ -388,10 +411,12 @@ function createExport() {
 	var labels2 = ["Cool Shirt", "Cotton Canvas", "100% Cotton", "270 GSM", "Garmet Wash", "One Size Fits All"];
 	
 	render(true);
-	drawTable(pageWidth-100-margin, margin + 18, labels.length, 2, [labels, labels2], 100, 6, true, false);
+	drawTable(pageWidth-100-margin, margin + 30, labels.length, 2, [labels, labels2], 100, 6, true, false);
 	
+	pdf.addImage(canvas.toDataURL("image/png"), 'PNG', 0, 12, 100, 100);
 	
-	pdf.addImage(canvas.toDataURL("image/png"), 'PNG', 0, 0, 100, 100);
+	render(true, 2);
+	pdf.addImage(canvas.toDataURL("image/png"), 'PNG', pageWidth-110, 90, 100, 100);
 	
 	// new page
 	pdf.addPage();
