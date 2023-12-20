@@ -190,13 +190,24 @@ function run() {
 	
 	interpreter.tokenize();
 	
-	console.log("Tokens");
-	for (var i = 0; i < interpreter.tokens.length; i++) {
-		console.log(interpreter.tokens[i]);
+//	console.log("Tokens");
+//	for (var i = 0; i < interpreter.tokens.length; i++) {
+//		console.log(interpreter.tokens[i]);
+//	}
+	
+	//console.log(interpreter.tokenIndex);
+	
+	interpreter.toRPN();
+	
+	console.log("RPN Tree");
+	for (var i = 0; i < interpreter.rpn.length; i++) {
+		console.log(interpreter.rpn[i]);
 	}
 	
-	console.log(interpreter.tokenIndex);
+	var result = interpreter.evaluateRPN(interpreter.rpn);
 	
+	console.log(result);
+	console.log(result[0].value);
 }
 
 
