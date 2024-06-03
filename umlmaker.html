@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<head>
+	<title>UML maker</title>
+	<style>
+		body {
+			margin: 0;
+		}
+		canvas {
+			display: block;
+		}
+		#code {
+			display: block;
+			position: fixed;
+			top: 0;
+			left: 0;
+			visibility: hidden;
+		}
+		#file {
+			display: block;
+			position: fixed;
+			top: 0;
+			left: 0;
+			visibility: hidden;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="canvas"></canvas>
+	<script>
+		
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext("2d");
+		
+		setInterval(update, 50);
+		
+		var mouseX = null;
+		var mouseY = null;
+		var mouseDown = false;
+		var moving = false;
+		canvas.onmousemove = function(event) {
+			mouseX = event.clientX;
+			mouseY = event.clientY;
+			
+			if (moving !== false) {
+				objects[moving].x = mouseX - offX;
+				objects[moving].y = mouseY - offY;
+			}
+			if (shift) {
+				dealSelecting(false);
+			}
+		};
+		var offX = 0;
+		var offY = 0;
+		canvas.onmousedown = function(event) { //console.log(event);
+			if (event.button !== 0) {
+				return;
+			}
+			if (shift) {
+				dealSelecting(true);
+				return;
+			}
+			
+			mouseDown = true;
+			
+			// Create Object
+			if (STATUS.length == 0) {
+				var t = touching();
+				if (t === false) {
+					objects.push(new Object(mouseX, mouseY));
+				} else {
+					offX = mouseX - objects[t].x;
+					offY = mouseY - objects[t].y;
+					moving = t;
+				}
+			} else {
+				var t = touching();
+				if (t !== false) {
+					addLabel(t, STATUS);
+					STATUS = "";
+				} else {
+					if (STATUS === "save") {
+						save();
+						STATUS = "";
+					} else if (STATUS === "load") {
+						load();
+						STATUS = "";
+					} else if (STATUS === "import") {
+						importCode();
+						STATUS = "";
+					} else if (STATUS === "upload") {
+						uploadFiles();
+						STATUS = "";
+					}
+				}
+			}
+		};
+		var toConnect = [];
+		function dealSelecting(override) {
+			var t = touching();
+			if (t !== false) {
+				var o = objects[t];
+				var target = Math.floor((mouseY - o.y - 18)/20);
+				if (target < 0) {
+					target = 0;
+				}
+				if (target >= o.title.length) {
+					target = 0;
+				}
+				if (override) {
+					o.selected = target;
+					o.selectConfirmed = true;
+					if (!toConnect.includes(t)) {
+						toConnect.push(t);
+					}
+				}
+				if (!o.selectConfirmed) {
+					o.selected = target;
+					if (!toConnect.includes(t)) {
+						toConnect.push(t);
+					}
+				}
+			}
+		}
+		canvas.onmouseup = function(event) {
+			mouseDown = false;
+			moving = false;
+		};
+		var shift = false;
+		var keysPressed = [];
+		document.onkeydown = function(event) { //console.log(event.key);
+			if (event.key === "Shift") {
+				shift = true;
+				dealSelecting(false);
+				return;
+			}
+			keysPressed.push(event.key);
+		}
+		document.onkeyup = function(event) {
+			if (event.key === "Shift") {
+				shift = false;
+				// Connect Stuff
+				if (toConnect.length === 1) {
+					var node = toConnect[0];
+					var index = objects[node].selected;
+					deleteLabel(node, index);
+				}
+				while (toConnect.length > 1) {
+					var node1 = toConnect.shift();
+					var node2 = toConnect[0];
+					var index1 = objects[node1].selected;
+					var index2 = objects[node2].selected;
+					if (objects[node1].title[0][0] === "<") { // interface
+						addConnection(node2, index2, node1, index1, 1);
+					} else {
+						addConnection(node1, index1, node2, index2, 0);
+					}
+				}
+				toConnect = [];
+				for (var i = 0; i < objects.length; i++) {
+					objects[i].selected = null;
+					objects[i].selectConfirmed = false;
+				}
+			}
+		}
+		
+		// PROGRAM START
+		
+		var objects = [];
+		class Object {
+			constructor(x, y) {
+				this.x = x-100;
+				this.y = y;
+				this.w = 200;
+				this.h = 100;
+				
+				this.title = [];
+				this.connections = [];
+				
+				this.selected = null;
+				this.selectConfirmed = false;
+			}
+			drawConnections() {
+				// Draw Connections
+				for (var i = 0; i < this.connections.length; i++) {
+					var conn = this.connections[i];
+					var dest = objects[conn.index];
+					var off1 = 25+conn.item1*20;
+					var off2 = 25+conn.item2*20;
+					var ratio = conn.ratio;
+					if (conn.item1 === 0) {
+						off1 = 25;
+					}
+					if (conn.item2 === 0) {
+						off2 = 25;
+					}
+					var sx = this.x + this.w/2;
+					var sy = this.y + off1;
+					var ex = dest.x + dest.w/2;
+					var ey = dest.y + off2;
+					
+					var dirx;
+					var diry;
+					if (sx - this.w/2 < ex + dest.w/2 && sx + this.w/2 > ex - dest.w/2) {
+						dirx = 0;
+					} else if (sx < ex) {
+						dirx = 1;
+						sx += this.w/2;
+						ex -= dest.w/2;
+					} else {
+						dirx = -1;
+						sx -= this.w/2;
+						ex += dest.w/2;
+					}
+					if (sy < ey) {
+						diry = 1;
+					} else {
+						diry = -1;
+					}
+					
+					if (true) { // top down arrow
+						ctx.beginPath();
+						ctx.lineTo(sx, sy);
+						
+						if (Math.abs(sy - ey) > 10) { // curves
+							ctx.lineTo((sx+ex)*ratio-5*dirx, sy);
+							ctx.quadraticCurveTo((sx+ex)*ratio, sy, (sx+ex)*ratio, sy+5*diry);
+							
+							ctx.lineTo((sx+ex)*ratio, ey-5*diry);
+							ctx.quadraticCurveTo((sx+ex)*ratio, ey, (sx+ex)*ratio+5*dirx, ey);
+						} else {
+							ey = sy;
+						}
+						
+						ctx.lineTo(ex, ey);
+						ctx.stroke();
+						
+						if (conn.type === 1) { // Diamond
+							if (dirx === 0) { // Diamond Head
+								ex = (sx + ex)/2;
+								ey = dest.y + dest.h*(1-diry)/2;
+								ctx.beginPath();
+								ctx.lineTo(ex, ey);
+								ctx.lineTo(ex+7, ey-10*diry);
+								ctx.lineTo(ex, ey-20*diry);
+								ctx.lineTo(ex-7, ey-10*diry);
+								ctx.lineTo(ex, ey);
+								ctx.fillStyle = "#fff";
+								ctx.fill();
+								ctx.stroke();
+							} else {
+								ctx.beginPath();
+								ctx.lineTo(ex, ey);
+								ctx.lineTo(ex-10*dirx, ey+7);
+								ctx.lineTo(ex-20*dirx, ey);
+								ctx.lineTo(ex-10*dirx, ey-7);
+								ctx.lineTo(ex, ey);
+								ctx.fillStyle = "#fff";
+								ctx.fill();
+								ctx.stroke();
+							}	
+						} else {
+							if (dirx === 0) { // Arrow Head
+								ex = (sx + ex)/2;
+								ey = dest.y + dest.h*(1-diry)/2;
+								ctx.beginPath();
+								ctx.lineTo(ex, ey);
+								ctx.lineTo(ex+7, ey-10*diry);
+								ctx.lineTo(ex, ey-7*diry);
+								ctx.lineTo(ex-7, ey-10*diry);
+								ctx.lineTo(ex, ey);
+								ctx.fillStyle = "#bbb";
+								ctx.fill();
+								ctx.stroke();
+							} else {
+								ctx.beginPath();
+								ctx.lineTo(ex, ey);
+								ctx.lineTo(ex-10*dirx, ey+7);
+								ctx.lineTo(ex-7*dirx, ey);
+								ctx.lineTo(ex-10*dirx, ey-7);
+								ctx.lineTo(ex, ey);
+								ctx.fillStyle = "#bbb";
+								ctx.fill();
+								ctx.stroke();
+							}	
+						}
+					}
+				}
+			}
+			draw() {
+				if (this.selected === 0) { // Selected
+					ctx.strokeStyle = "#7af";
+					ctx.beginPath();
+					ctx.roundRect(this.x-5, this.y-5, this.w+10, this.h+10, 7);
+					ctx.stroke();
+					ctx.strokeStyle = "#000";
+				}
+				
+				ctx.beginPath();
+				ctx.roundRect(this.x, this.y, this.w, this.h, 5);
+				ctx.fillStyle = "#fff";
+				ctx.fill();
+				ctx.lineWidth = 0.7;
+				ctx.stroke();
+				
+				var cols = ["#950","#090","#095","#059","#590","#509","#905","#099","#909","#550","#900"];
+				var rando = this.title[0].length + this.title.length;
+				ctx.fillStyle = cols[rando % cols.length];
+				
+				if (this.title.length > 0) {
+					var tWidth = ctx.measureText(this.title[0]).width;
+					ctx.fillText(this.title[0], this.x+Math.floor((this.w-tWidth)/2), this.y+20);
+				}
+				ctx.fillStyle = "#999";
+				if (this.title.length > 1) {
+					ctx.fillRect(this.x+10, this.y+28, this.w-20, 1);
+				}
+				ctx.fillStyle = "#000";
+				for (var i = 1; i < this.title.length; i++) {
+					if (this.selected === i) { // Selected
+						ctx.strokeStyle = "#7af";
+						ctx.beginPath();
+						ctx.roundRect(this.x+20, this.y+15+i*20, this.w-40, 20, 5);
+						ctx.stroke();
+						if (this.selectConfirmed) {
+							ctx.fillStyle = "#7af";
+							ctx.fill();
+							ctx.fillStyle = "#000";
+						}
+						ctx.strokeStyle = "#000";
+					}
+					if (this.title[i] === " ") {
+						ctx.fillStyle = "#999";
+						ctx.fillRect(this.x+20, this.y+24+i*20, this.w-40, 1);
+						ctx.fillStyle = "#000";
+					} else {
+						var tWidth = ctx.measureText(this.title[i]).width;
+						ctx.fillText(this.title[i], this.x+Math.floor((this.w-tWidth)/2), this.y+30+i*20);
+					}
+				}
+			}
+			mouseOn() {
+				if (mouseX > this.x && mouseX < this.x + this.w) {
+					if (mouseY > this.y && mouseY < this.y + this.h) {
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+		
+		function addConnection(s1, i1, s2, i2, type) {
+			objects[s1].connections.push({index: s2, item1: i1, item2: i2, type:type, ratio: 0.5})
+		}
+		function addLabel(t, label) {
+			objects[t].title.push(label);
+			if (objects[t].title.length*20+30 > objects[t].h) {
+				objects[t].h = objects[t].title.length*20+30;
+			}
+			if (ctx.measureText(label).width > objects[t].w + 20) {
+				objects[t].w = ctx.measureText(label).width + 20;
+			}
+		}
+		function deleteLabel(node, index) {
+			objects[node].title.splice(index, 1);
+			if (objects[node].title.length*20+30 < objects[node].h) {
+				objects[node].h = objects[node].title.length*20+30;
+			}
+		}
+		
+		function touching() {
+			var retVal = false;
+			for (var i = 0; i < objects.length; i++) {
+				var o = objects[i];
+				if (o.mouseOn()) {
+					retVal = i;
+					break
+				}
+			}
+			return retVal;
+		}
+		
+		var STATUS = "";
+		function update() {
+			resize();
+			ctx.font = "10px Serif";
+			
+			backspace = keysPressed.includes("Backspace");
+			
+			STATUS += unloadKeys();
+			if (backspace) {
+				STATUS  = "";
+			}
+			
+			for (var i = 0; i < objects.length; i++) {
+				var object = objects[i];
+				object.drawConnections();
+			}
+			
+			for (var i = 0; i < objects.length; i++) {
+				var object = objects[i];
+				object.draw();
+			}
+			
+			ctx.fillText(STATUS, mouseX ,mouseY);
+			
+		}
+		
+		function unloadKeys() {
+			var alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()`~-_=+[{]}\\|;:'\",<.>/? ";
+			var string = "";
+			while (keysPressed.length > 0) {
+				var key = keysPressed.pop();
+				if (alphabet.includes(key)) {
+					string += key;
+				}
+			}
+			return string;
+		}
+		
+		function resize() {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			ctx.fillStyle = "#fff";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			ctx.fillStyle = "#222";
+		}
+		
+		function save() {
+			localStorage.objects = JSON.stringify(objects);
+		}
+		
+		function load() {
+			objects = JSON.parse(localStorage.objects);
+			for (var i = 0; i < objects.length; i++) {
+				objects[i].draw = new Object().draw;
+				objects[i].drawConnections = new Object().drawConnections;
+				objects[i].mouseOn = new Object().mouseOn;
+			}
+		}
+		
+		// Auto UML designer below here
+		function importCode() {
+			var imp = document.getElementById("code");
+			if (imp.style.visibility === "visible") {
+				imp.style.visibility = "hidden";
+				// Run some code
+				loadClass(imp.value);
+				imp.value = "";
+			} else {
+				imp.style.visibility = "visible";
+				imp.style.left = mouseX + "px";
+				imp.style.top = mouseY + "px";
+			}
+		}
+		
+		var filesList = [];
+		function uploadFiles() {
+			var imp = document.getElementById("file");
+			if (imp.style.visibility === "visible") {
+				imp.style.visibility = "hidden";
+				// Run some code
+				filesList = [];
+				var files = [];
+				for (var f = 0; f < imp.files.length; f++) {
+					var n = imp.files[f].name;
+					if (".java" === n.slice(n.length-5, n.length)) {
+						files.push(imp.files[f]);
+					}
+				}
+				var fileReader = new FileReader();
+				fileReader.onload = function(file) {
+					var text = file.target.result;
+					filesList.push(text);
+					if (filesList.length < files.length) {
+						fileReader.readAsText(files[filesList.length], "UTF-8");
+					} else {
+						//console.log("done", filesList);
+						loadFilesList();
+					}
+				};
+				
+				fileReader.readAsText(files[0], "UTF-8");
+			} else {
+				imp.style.visibility = "visible";
+				imp.style.left = mouseX + "px";
+				imp.style.top = mouseY + "px";
+				imp.value = "";
+			}
+		}
+		
+		function loadFilesList() {
+			var tokenIndex;
+			function scan(tokenList) {
+				while (!tokenList.includes(tokens[tokenIndex])) {
+					if (tokenIndex >= tokens.length) {
+						break;
+					}
+					tokenIndex++;
+				}
+			}
+			var specifiers = ["public","protected","private"];
+			function stopPoint() { // public, private, protected
+				while (!specifiers.includes(tokens[tokenIndex])) {
+					if (tokenIndex >= tokens.length) {
+						return false;
+					}
+					tokenIndex++;
+				}
+				return true;
+			}
+			// Create all the classes
+			var classNames = [];
+			var createX = 120;
+			var createY = 20;
+			for (var i = 0; i < filesList.length; i++) {
+				var code = filesList[i];
+				objects.push(new Object(createX, createY));
+				
+				var tokens = tokenize(code);
+				
+				tokenIndex = 0;
+				console.log(tokens);
+				scan(["class", "enum", "interface"]);
+				var className = tokens[tokenIndex + 1];
+				
+				if (tokens[tokenIndex] !== "class") {
+					className = "<<" + tokens[tokenIndex] + ">> " + className;
+				}
+				
+				classNames.push(className);
+				
+				addLabel(objects.length-1, className);
+				
+				// move the spawnpoint for next class
+				createX += 220;
+				if (createX > canvas.width - 120) {
+					createX = 120;
+					createY += 200;
+				}
+			}
+			// Add all the attributes and stuff
+			for (var i = 0; i < filesList.length; i++) {
+				var code = filesList[i];
+				var tokens = tokenize(code);
+				
+				
+				var firstPass = true;
+				for (var pass = 0; pass < 2; pass++) { // please indent this out when I get access to a code editor!
+				tokenIndex = 0;
+				scan(["class", "enum", "interface"]);
+				var className = tokens[tokenIndex + 1];
+				while (stopPoint()) {
+					var specifier = tokens[tokenIndex];
+					tokenIndex++;
+					var type = tokens[tokenIndex];
+					tokenIndex++;
+					var stack1 = 0;
+					var stack2 = 0;
+					var stack3 = 0;
+					var count = 0;
+					var isConstructor = false;
+					var parameters = "";
+					if (tokens[tokenIndex] === "<" || tokens[tokenIndex] === "[") {
+						while ((["(", "<", "["].includes(tokens[tokenIndex]) || stack1 !== 0 || stack2 !== 0 || stack3 !== 0) && count < 100) { count++; // watch out for infinte loop
+							if (tokens[tokenIndex] === "(") {
+								stack1++;
+							} else if (tokens[tokenIndex] === "<") {
+								stack2++;
+							} else if (tokens[tokenIndex] === "[") {
+								stack3++;
+							} else if (tokens[tokenIndex] === ")") {
+								stack1--;
+							} else if (tokens[tokenIndex] === ">") {
+								stack2--;
+							} else if (tokens[tokenIndex] === "]") {
+								stack3--;
+							}
+							type += tokens[tokenIndex];
+							tokenIndex++;
+						}
+					} else if (tokens[tokenIndex] === "(") {
+						isConstructor = true;
+						var tempParams = [];
+						while (tokens[tokenIndex+1] !== ")") {
+							tokenIndex++;
+							if (tokens[tokenIndex] === ",") {
+								var tempString = "";
+								while (tempParams.length > 1) {
+									tempString += tempParams.shift();
+								}
+								tempString = tempString + " : " + tempParams.pop()
+								parameters += tempString + ", ";
+							} else {
+								tempParams.push(tokens[tokenIndex]);
+							}
+						}
+						if (tempParams.length > 0) {
+							var tempString = "";
+							while (tempParams.length > 1) {
+								tempString += tempParams.shift();
+							}
+							tempString = tempParams.pop() + " : " + tempString;
+							parameters += tempString;
+						}
+						tokenIndex++;
+					}
+					var identifier = tokens[tokenIndex];
+					tokenIndex++;
+					if (firstPass && [";", "="].includes(tokens[tokenIndex])) {
+						if (isConstructor) {
+							addLabel(i, ['+','#','-'][specifiers.indexOf(specifier)] + " " + type + "(" + parameters + ")");
+						} else {
+							addLabel(i, ['+','#','-'][specifiers.indexOf(specifier)] + " " + identifier + " : " + type);
+						}
+					} else if (!firstPass && ![";", "="].includes(tokens[tokenIndex])) {
+						if (isConstructor) {
+							addLabel(i, ['+','#','-'][specifiers.indexOf(specifier)] + " " + type + "(" + parameters + ")");
+						} else {
+							addLabel(i, ['+','#','-'][specifiers.indexOf(specifier)] + " " + identifier + " : " + type);
+						}
+					}
+				}
+				if (firstPass && objects[i].title.length > 1) {
+					addLabel(i, " ");
+				}
+				firstPass = false;
+				}
+			}
+		}
+		
+		function loadClass(code) { // outdated don't use this
+			var tokens = tokenize(code);
+			var prevToken = null;
+			for (var t = 0; t < tokens.length; t++) {
+				var token = tokens[t];
+				if (["class", "enum", "interface"].includes(token)) {
+					objects.push(new Object(300, 50));
+				}
+				if (objects.length > 0) {
+					if (prevToken == "public" || prevToken == "private") {
+						addLabel(objects.length-1, token + " " + tokens[t+1]);
+					}
+				}
+				prevToken = token;
+			}
+			//objects.push(new Object(mouseX, mouseY));
+		}
+		
+		function tokenize(code) {
+			var whitespace = [" ", "\t", "\n", "\r"];
+			var punctuals = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','\\','|',';',':','\'','"',',','<','>','.','/','?'];
+			var tokens = [];
+			function addToken(token) {
+				if (token.length > 0) {
+					tokens.push(token);
+				}
+				string = "";
+			}
+			
+			var inString = false;
+			var inChar = false;
+			var inComm = false;
+			var inMulti = false;
+			
+			var string = "";
+			for (var i = 0; i < code.length; i++) {
+				var letter = code[i];
+				
+				// Check Exit States //
+				if (inString) { // in string?
+					if (letter === '\\') {
+						i++;
+					} else if (letter === '"') {
+						inString = false;
+						// add string token to tokens
+					}
+					continue;
+				} else if (inChar) { // in char?
+					if (letter === '\\') {
+						i++;
+					} else if (letter === "'") {
+						inChar = false;
+						// add char token to tokens
+					}
+					continue;
+				} else if (inComm) { // in single line comment?
+					if (letter === '\n' || letter === '\r') {
+						inComm = false;
+					}
+					continue;
+				} else if (inMulti) { // in multiline comment?
+					if (code[i-1] === '*' && letter === '/') {
+						inMulti = false;
+					}
+					continue;
+				}
+				// End Check Exit //
+				
+				// Check Enter States //
+				if (letter === '"') {
+					inString = true;
+					continue;
+				} else if (letter === "'") {
+					inChar = true;
+					continue;
+				} else if (letter === '/' && code[i+1] === '/') {
+					inComm = true;
+					continue;
+				} else if (letter === '/' && code[i+1] === '*') {
+					inMulti = true;
+					continue;
+				}
+				// End Check Enter //
+				
+				if (whitespace.includes(letter)) {
+					addToken(string);
+				} else if (punctuals.includes(letter)) {
+					addToken(string);
+					addToken(letter);
+				} else {
+					string += letter;
+				}
+			}
+			addToken(string);
+			
+			return tokens;
+		}
+		
+		//console.log(tokenize("test string.length() 123"));
+		
+	</script>
+	<textarea id="code"></textarea>
+	<input id="file" type="file" multiple oninput="uploadFiles()" />
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
