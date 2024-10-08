@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Personal Page</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 20px;
+			background-color: hsl(100, 100%, 95%);
+			text-align: center;
+		}
+		h1 {
+			color: #222;
+		}
+		.container {
+			width: 100%;
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+		.item {
+			display: table;
+			margin: 10px auto;
+			background: white;
+			border-radius: 8px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			overflow: hidden;
+			padding: 15px;
+			width: 80%;
+		}
+		.item img {
+			height: 300px;
+			display: table-cell;
+			vertical-align: middle;
+			margin-right: 15px;
+			border-radius: 5px;
+		}
+		.prompt {
+			display: table-cell;
+			vertical-align: middle;
+			font-size: 18px;
+			font-style: italic;
+			color: #444;
+			width: 100%;
+		}
+		.prompt h1 {
+			font-size: 32px;
+			margin-bottom: 5px;
+			color: #222;
+		}
+		.middle {
+			display: table;
+			margin: 10px;
+			background: white;
+			border-radius: 8px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			overflow: hidden;
+			padding: 15px;
+			width: 80%;
+		}
+		.middle img {
+			height: 300px;
+			display: table-cell;
+			vertical-align: middle;
+			float: right;
+			border-radius: 5px;
+		}
+	</style>
+	<script>
+		document.onscroll = function(event) { // adding a bit of Louis creativity :D
+			document.body.style.backgroundColor = `hsl(${Math.floor(window.pageYOffset/4) + 100}, 100%, 95%)`;
+		}
+	</script>
+</head>
+<body>
+	<h1>About me</h1>
+	<div class="container">
+		<div class="item">
+			<img src="img/compsoc.jpg">
+			<div class="prompt">
+				<h1>CompSoc 2024</h1>
+				2024 Academic and Industry Event Manager
+			</div>
+		</div>
+		<div class="middle">
+			<div class="prompt">
+				<h1>Guitar and Music</h1>
+				Check out our band! <a href="https://www.instagram.com/official_detour/">Detour</a>
+			</div>
+			<img src="img/me2.jpg">
+		</div>
+		<div class="item">
+			<img src="img/me3.jpg">
+			<div class="prompt">
+				<h1>Passion for Innovation</h1>
+				Most recent Project <a href="https://guitarmemo.com/">https://guitarmemo.com/</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
