@@ -7,7 +7,7 @@
       "C & (X11) for Linux, C++ & (Win32 API) for Windows",
       "Double buffering, handling windows, importing and rendering fonts, event systems"
     ],
-    "image": "https://lhobson.com/images/"
+    "image": "https://lhobson.com/images/codeeditor.png"
   },
   {
     "title": "JsPDF Target Generator",
@@ -27,7 +27,7 @@
       "Uses JavaScript and HTML5 Cavnas"
     ],
     "link": "https://epicpong.glitch.me/",
-    "image": "https://lhobson.com/images/epicpng.jpeg"
+    "image": "https://lhobson.com/images/epicpong.jpeg"
   },
   {
     "title": "SocketIO Chess Game",
