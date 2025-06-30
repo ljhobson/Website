@@ -6,7 +6,8 @@
     "content": [
       "C & (X11) for Linux, C++ & (Win32 API) for Windows",
       "Double buffering, handling windows, importing and rendering fonts, event systems"
-    ]
+    ],
+    "image": "https://lhobson.com/images/"
   },
   {
     "title": "JsPDF Target Generator",
@@ -15,7 +16,8 @@
     "content": [
       "A simple chain algorithm, displayed in a cute printable format"
     ],
-    "link": "https://assassintest.glitch.me/"
+    "link": "https://assassintest.glitch.me/",
+    "image": "https://lhobson.com/images/target.png"
   },
   {
     "title": "Epic Pong Game",
@@ -24,7 +26,8 @@
     "content": [
       "Uses JavaScript and HTML5 Cavnas"
     ],
-    "link": "https://epicpong.glitch.me/"
+    "link": "https://epicpong.glitch.me/",
+    "image": "https://lhobson.com/images/epicpng.jpeg"
   },
   {
     "title": "SocketIO Chess Game",
@@ -33,7 +36,8 @@
     "content": [
       "Yolo chess where you can see your opponent moving pieces live"
     ],
-    "link": "https://yolochess.glitch.me/"
+    "link": "https://yolochess.glitch.me/",
+    "image": "https://lhobson.com/images/yolochess.png"
   },
   {
     "title": "3D Tic Tac Toe",
@@ -42,7 +46,8 @@
     "content": [
       "Uses the rotation matrix"
     ],
-    "link": "https://lhobson.com/tictactoe/"
+    "link": "https://lhobson.com/tictactoe/",
+    "image": "https://lhobson.com/images/tictactoe.jpeg"
   },
   {
     "title": "Programming Language",
@@ -51,7 +56,8 @@
     "content": [
       "An interpreted programming language to code bots in for an online RISK game I made"
     ],
-    "link": "https://funcoding.glitch.me/"
+    "link": "https://funcoding.glitch.me/",
+    "image": "https://lhobson.com/images/funcoding.png"
   },
   {
     "title": "Logic Gate Simulator",
@@ -60,7 +66,8 @@
     "content": [
       "Uses DFS, Stacks and Queues to simulate logic gates"
     ],
-    "link": "https://lhobson.com/logic/"
+    "link": "https://lhobson.com/logic/",
+    "image": "https://lhobson.com/images/logic.png"
   },
   {
     "title": "RISK Online Game",
@@ -70,6 +77,7 @@
       "Read and parsed existing XML map data into an editor",
       "Simulates complex game mechanics"
     ],
-    "link": "https://lhobson.com/Better Risk/"
+    "link": "https://lhobson.com/Better Risk/",
+    "image": "https://lhobson.com/images/risk.png"
   }
 ]
