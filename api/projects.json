@@ -1,0 +1,75 @@
+[
+  {
+    "title": "Code Editor",
+    "description": "GUI code editor applications for Linux and Windows with C and C++",
+    "date": "2021 – 2024",
+    "content": [
+      "C & (X11) for Linux, C++ & (Win32 API) for Windows",
+      "Double buffering, handling windows, importing and rendering fonts, event systems"
+    ]
+  },
+  {
+    "title": "JsPDF Target Generator",
+    "description": "Assign everyone an assassin then generate a pdf using jsPDF",
+    "date": "2022",
+    "content": [
+      "A simple chain algorithm, displayed in a cute printable format"
+    ],
+    "link": "https://assassintest.glitch.me/"
+  },
+  {
+    "title": "Epic Pong Game",
+    "description": "Highly immersive pong game made for Web",
+    "date": "2021",
+    "content": [
+      "Uses JavaScript and HTML5 Cavnas"
+    ],
+    "link": "https://epicpong.glitch.me/"
+  },
+  {
+    "title": "SocketIO Chess Game",
+    "description": "Online player vs. player chess game",
+    "date": "2020",
+    "content": [
+      "Yolo chess where you can see your opponent moving pieces live"
+    ],
+    "link": "https://yolochess.glitch.me/"
+  },
+  {
+    "title": "3D Tic Tac Toe",
+    "description": "Connect 4 in 3D using Javascript",
+    "date": "2020",
+    "content": [
+      "Uses the rotation matrix"
+    ],
+    "link": "https://lhobson.com/tictactoe/"
+  },
+  {
+    "title": "Programming Language",
+    "description": "An Interpreted language made in JavaScript",
+    "date": "2020",
+    "content": [
+      "An interpreted programming language to code bots in for an online RISK game I made"
+    ],
+    "link": "https://funcoding.glitch.me/"
+  },
+  {
+    "title": "Logic Gate Simulator",
+    "description": "Work up from the NAND gate to a computer built in JavaScript",
+    "date": "2020",
+    "content": [
+      "Uses DFS, Stacks and Queues to simulate logic gates"
+    ],
+    "link": "https://lhobson.com/logic/"
+  },
+  {
+    "title": "RISK Online Game",
+    "description": "Using HTML5 Canvas and ctx",
+    "date": "2020",
+    "content": [
+      "Read and parsed existing XML map data into an editor",
+      "Simulates complex game mechanics"
+    ],
+    "link": "https://lhobson.com/Better Risk/"
+  }
+]
