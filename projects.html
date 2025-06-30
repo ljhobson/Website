@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Index</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background-color: #f4f4f5;
+      color: #111;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin-bottom: 1.5rem;
+    }
+    .card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 0.25rem;
+    }
+    .card h2 a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    .card h2 a:hover {
+      text-decoration: underline;
+    }
+    .card p {
+      margin: 0.4rem 0;
+    }
+    .date {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    ul {
+      margin: 0.5rem 0 0 1.25rem;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 0.25rem;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Projects</h1>
+    <div id="project-list"></div>
+  </div>
+
+  <script>
+  
+  	var projects = [];
+    fetch('https://lhobson.com/projects.json', {
+		method: 'GET'
+	}).then(function(e){
+		return e.json();
+	}).then(function(e) {
+		projects = e;
+		console.log(projects);
+		renderProjects();
+	});
+	
+    var container = document.getElementById('project-list');
+	
+	function renderProjects() {
+		projects.forEach(project => {
+			var card = document.createElement('div');
+			card.className = 'card';
+
+			// Create a flex container inside card to hold text and image side by side
+			var flexContainer = document.createElement('div');
+			flexContainer.style.display = 'flex';
+			flexContainer.style.justifyContent = 'space-between';
+			flexContainer.style.alignItems = 'flex-start';
+			flexContainer.style.gap = '1rem';
+
+			// Left side container for text
+			var textContainer = document.createElement('div');
+			textContainer.style.flex = '1';
+
+			// Title (with optional link)
+			var title = document.createElement('h2');
+			if (project.link) {
+			  const link = document.createElement('a');
+			  link.href = project.link;
+			  link.target = '_blank';
+			  link.textContent = project.title;
+			  title.appendChild(link);
+			} else {
+			  title.textContent = project.title;
+			  if (!project.notBold) title.style.fontWeight = '600';
+			}
+
+			// Date
+			var date = document.createElement('p');
+			date.className = 'date';
+			date.textContent = project.date;
+
+			// Description
+			var desc = document.createElement('p');
+			desc.textContent = project.description;
+
+			// Content list
+			var ul = document.createElement('ul');
+			project.content.forEach(item => {
+			  const li = document.createElement('li');
+			  li.textContent = item;
+			  ul.appendChild(li);
+			});
+
+			// Append text elements to textContainer
+			textContainer.appendChild(title);
+			if (project.date) textContainer.appendChild(date);
+			if (project.description) textContainer.appendChild(desc);
+			if (project.content.length > 0) textContainer.appendChild(ul);
+
+			// Right side: image container
+			var imageContainer = document.createElement('div');
+			imageContainer.style.flex = '0 0 150px'; // fixed width for image box
+
+			if (project.image) {
+			  var img = document.createElement('img');
+			  img.src = project.image;
+			  img.alt = project.title + ' image';
+			  img.style.width = '100%';
+			  img.style.borderRadius = '8px';
+			  img.style.objectFit = 'cover';
+			  imageContainer.appendChild(img);
+			}
+
+			// Append text and image containers to flex container
+			flexContainer.appendChild(textContainer);
+			flexContainer.appendChild(imageContainer);
+
+			// Append flex container to card
+			card.appendChild(flexContainer);
+
+			// Append card to container (assumed defined globally)
+			container.appendChild(card);
+			});
+		}
+    
+  </script>
+
+</body>
+</html>
