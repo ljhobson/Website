@@ -30,6 +30,16 @@
     "image": "https://lhobson.com/images/epicpong.jpeg"
   },
   {
+    "title": "Programming Language",
+    "description": "An Interpreted language made in JavaScript",
+    "date": "2020",
+    "content": [
+      "An interpreted programming language to code bots in for an online RISK game I made"
+    ],
+    "link": "https://funcoding.glitch.me/",
+    "image": "https://lhobson.com/images/funcoding.png"
+  },
+  {
     "title": "SocketIO Chess Game",
     "description": "Online player vs. player chess game",
     "date": "2020",
@@ -48,16 +58,6 @@
     ],
     "link": "https://lhobson.com/tictactoe/",
     "image": "https://lhobson.com/images/tictactoe.jpeg"
-  },
-  {
-    "title": "Programming Language",
-    "description": "An Interpreted language made in JavaScript",
-    "date": "2020",
-    "content": [
-      "An interpreted programming language to code bots in for an online RISK game I made"
-    ],
-    "link": "https://funcoding.glitch.me/",
-    "image": "https://lhobson.com/images/funcoding.png"
   },
   {
     "title": "Logic Gate Simulator",
