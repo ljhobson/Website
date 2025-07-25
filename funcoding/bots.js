@@ -754,8 +754,8 @@ function changeFont(font) {
 	output.style.fontFamily = font;
 }
 
-if (localStorage.editor !== undefined) {
-	editor.value = localStorage.editor;
+if (localStorage.editorFun !== undefined) {
+	editor.value = localStorage.editorFun;
 } else {
   editor.value = `// sample program, click run twice to run
 // made by Louis
@@ -810,7 +810,7 @@ editor.oninput = function(event) {
 	}
 	
 	
-	localStorage.editor = editor.value;
+	localStorage.editorFun = editor.value;
 	tL = tokenize(editor.value);
 	
 	overlay.innerHTML = highlight(editor.value, tL);
@@ -938,7 +938,7 @@ editor.addEventListener('keydown', function(e) {
 		}
 	}
 	
-	localStorage.editor = this.value;
+	localStorage.editorFun = this.value;
 	tL = tokenize(editor.value);
 	overlay.innerHTML = highlight(editor.value, tL);
 });
