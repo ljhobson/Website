@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Resume Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js" defer></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Resume and Cover Letter Generator</h1>
+  <div id="wrapper">
+    <div>
+      <textarea id="job-desc" placeholder="Enter the job description here"></textarea><br>
+      <button onclick="analyze()">Analyse and Generate</button>
+      <input type="checkbox" id="all-projects">Include All Projects</input>
+      <a>Except the following:</a><input id="except" value='["Epic Pong Game", "JsPDF Target Generator"]'></input>
+    </div>
+    <div>
+      <h2>CV Generator</h2>
+      <br>
+      <p>
+        Hidden Keywords: <input id="keywords" onchange="updateKeywords()"></input>
+      </p>
+      <input id="pdfname" value="Louis-Hobson.pdf"></input>
+      <button onclick="generatePDF()">Download PDF</button>
+    </div>
+    <div>
+      <h2>Cover Letter Generator</h2>
+      <br>
+      <textarea id="cover-letter" placeholder="Result"></textarea>
+      <br>
+      <button onclick="generateCL()">Download PDF</button>
+    </div>
+  </div>
+  <div id="settings">
+    <h2>Settings</h2>
+      <textarea id="settingsElement" onchange="applySettings()" spellcheck="false"></textarea>
+  </div>
+  
+
+</body>
+</html>
