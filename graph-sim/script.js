@@ -8,25 +8,90 @@ function resize() {
 
 window.onload = function(event) {
 	resize();
-	for (var i = 0; i < 20; i++) {
-		var cons = [];
-		for (var j = 0; j < Math.floor(Math.random() * 3); j++) {
-			var number = Math.floor(Math.random() * 10);
-			if (!cons.includes(number) && number !== i) {
-				cons.push(number);
+	
+	if (isRandom) {
+		for (var i = 0; i < 64; i++) {
+			var cons = [];
+			for (var j = 0; j < Math.floor(Math.random() * 5); j++) {
+				var number = Math.floor(Math.random() * 40);
+				if (!cons.includes(number) && number !== i) {
+					cons.push(number);
+				}
 			}
+			nodes.push( { x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: 10, connections: cons } )
 		}
-		nodes.push( { x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: 25, connections: cons } )
+	} else {
+		for (var i = 0; i < 64; i++) {
+			var cons = [];
+			var key = [1, 8];
+			for (var j = 0; j < 2; j++) {
+				var conNode = i + key[j];
+				if (conNode > 0 && conNode < 64 && !(i % 8 === 7 && j === 0)) {
+					cons.push(conNode);
+				}
+			}
+			nodes.push( { x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: 10, connections: cons } )
+		}	
 	}
 	
+	var size = nodes.length;
+	for (var i = 0; i < size; i++) {
+		for (var j = 0; j < Math.floor(Math.random()*10); j++) {
+			nodes.push( { x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: 5, connections: [i] } )
+		}
+	}
+	
+	makeConnectionsBidirectional(nodes);
 	update();
+}
+
+var moving = false;
+var mouse = {};
+window.onmousemove = function(event) {
+	mouse.x = event.layerX;
+	mouse.y = event.layerY;
+}
+
+window.onmousedown = function(event) {
+	mouse.down = true;
+	mouse.x = event.layerX;
+	mouse.y = event.layerY;
+	
+	for (var i = 0; i < nodes.length; i++) {
+		if (mag(mouse, nodes[i]) <= nodes[i].size*nodes[i].size) {
+			moving = i;
+			break;
+		}
+	}
+}
+
+window.onmouseup = function(event) {
+	mouse.down = false;
+	mouse.x = event.layerX;
+	mouse.y = event.layerY;
+	
+	moving = false;
+}
+
+
+
+function makeConnectionsBidirectional(nodes) {
+	for (let i = 0; i < nodes.length; i++) {
+		let node = nodes[i];
+		for (let j of node.connections) {
+			if (!nodes[j].connections.includes(i)) {
+				nodes[j].connections.push(i);
+			}
+		}
+	}
 }
 
 window.onresize = function(event) {
 	resize();
 }
 
-
+var speed = 10;
+var isRandom = true;
 var nodes = [];
 
 function drawNode(node) {
@@ -60,41 +125,65 @@ function update() {
 	for (var i = 0; i < nodes.length; i++) {
 		var subject = nodes[i];
 		for (var j = 0; j < nodes.length; j++) {
-			var dx, dy;
+			var dx = 0;
+			var dy = 0;
 			if (j === i) {
 				//continue;
 			}
 			var target = nodes[j];
 			var group = 1;
 			var dist2 = mag(subject, target);
+			
+			var c;
 			if (subject.connections.includes(j)) {
-				group = 10000;
+				c = -(speed*1 / (0.1 + dist2)); // bigger the distance the smaller the force
+			} else {
+				c = -(speed*10 / (0.1 + dist2)); // bigger the distance the smaller the force
 			}
-			var c = -(100000000 / (0.1 + dist2 * dist2 * group ));
-			//console.log(c);
-			dx = c*(target.x - subject.x);
-			dy = c*(target.y - subject.y);
 			
-			subject.x += dx;
-			subject.y += dy;
+			dx += c*(target.x - subject.x);
+			dy += c*(target.y - subject.y);
 			
-			dx = (canvas.width/2 - subject.x) / 1000;
-			dy = (canvas.height/2 - subject.y) / 1000;
+//			subject.x += dx;
+//			subject.y += dy;
+			
+			if (subject.connections.includes(j)) {
+				c = (speed*(Math.sqrt(dist2)) / 100000); // bigger the distance the bigger the force
+				dx += c*(target.x - subject.x);
+				dy += c*(target.y - subject.y);
+			}
+			
+//			subject.x += dx;
+//			subject.y += dy;
+			
+			dx += (canvas.width/2 - subject.x) / (100000/speed);
+			dy += (canvas.height/2 - subject.y) / (100000/speed);
 			
 			subject.x += dx;
 			subject.y += dy;
 			
 			bound(subject);
+		}
 			
-			// Draw Connections
+		if (moving !== false && moving === i) {
+			subject.x = mouse.x;
+			subject.y = mouse.y;
+		}
+		drawNode(subject);
+	}
+	
+	// draw connections
+	for (var i = 0; i < nodes.length; i++) {
+		var subject = nodes[i];
+		for (var j = 0; j < nodes.length; j++) {
 			if (subject.connections.includes(j)) {
+				var target = nodes[j];
 				ctx.beginPath();
 				ctx.lineTo(subject.x, subject.y);
 				ctx.lineTo(target.x, target.y);
 				ctx.stroke();
 			}
 		}
-		drawNode(subject);
 	}
 	
 	requestAnimationFrame(update);
