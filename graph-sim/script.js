@@ -60,6 +60,7 @@ function update() {
 	for (var i = 0; i < nodes.length; i++) {
 		var subject = nodes[i];
 		for (var j = 0; j < nodes.length; j++) {
+			var dx, dy;
 			if (j === i) {
 				//continue;
 			}
@@ -67,15 +68,23 @@ function update() {
 			var group = 1;
 			var dist2 = mag(subject, target);
 			if (subject.connections.includes(j)) {
-				group = dist2;
+				group = 10000;
 			}
 			var c = -(100000000 / (0.1 + dist2 * dist2 * group ));
 			//console.log(c);
-			subject.x += c*(target.x - subject.x);
-			subject.y += c*(target.y - subject.y);
+			dx = c*(target.x - subject.x);
+			dy = c*(target.y - subject.y);
+			
+			subject.x += dx;
+			subject.y += dy;
+			
+			dx = (canvas.width/2 - subject.x) / 1000;
+			dy = (canvas.height/2 - subject.y) / 1000;
+			
+			subject.x += dx;
+			subject.y += dy;
+			
 			bound(subject);
-			subject.x += (canvas.width/2 - subject.x) / 100;
-			subject.y += (canvas.height/2 - subject.y) / 100;
 			
 			// Draw Connections
 			if (subject.connections.includes(j)) {
