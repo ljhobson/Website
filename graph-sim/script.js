@@ -6,19 +6,25 @@ function resize() {
 	canvas.height = window.innerHeight;
 }
 
+var nodeData = [];
+function generateNodeData() {
+	
+}
+
 window.onload = function(event) {
 	resize();
+	generateNodeData();
 	
 	if (isRandom) {
-		for (var i = 0; i < 64; i++) {
+		for (var i = 0; i < 200; i++) {
 			var cons = [];
-			for (var j = 0; j < Math.floor(Math.random() * 5); j++) {
-				var number = Math.floor(Math.random() * 40);
+			for (var j = 0; j < Math.floor(Math.random() * Math.random() * Math.random() * 50); j++) {
+				var number = Math.floor(Math.random() * 200);
 				if (!cons.includes(number) && number !== i) {
 					cons.push(number);
 				}
 			}
-			nodes.push( { x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.floor(5 + cons.length * 5), connections: cons } )
+			nodes.push( { id:i, x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.floor(5 + cons.length * 5), connections: cons } )
 		}
 	} else {
 		for (var i = 0; i < 64; i++) {
@@ -34,18 +40,19 @@ window.onload = function(event) {
 		}	
 	}
 	
-	var size = nodes.length;
-	for (var i = 0; i < size; i++) {
-		for (var j = 0; j < Math.floor(Math.random()*10); j++) {
-			nodes[i].size += 5;
-			nodes.push( { x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: 5, connections: [i] } )
-		}
-	}
+//	var size = nodes.length;
+//	for (var i = 0; i < size; i++) {
+//		for (var j = 0; j < Math.floor(Math.random()*10); j++) {
+//			nodes[i].size += 5;
+//			nodes.push( { x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: 5, connections: [i] } )
+//		}
+//	}
 	
 	makeConnectionsBidirectional(nodes);
 	update();
 }
 
+var selected = false;
 var moving = false;
 var mouse = {};
 window.onmousemove = function(event) {
@@ -61,9 +68,14 @@ window.onmousedown = function(event) {
 	for (var i = 0; i < nodes.length; i++) {
 		if (mag(mouse, nodes[i]) <= nodes[i].size*nodes[i].size) {
 			moving = i;
+			selected = i;
+			return;
 			break;
 		}
 	}
+	
+	moving = false;
+	selected = false;
 }
 
 window.onmouseup = function(event) {
@@ -101,7 +113,7 @@ function drawNode(node) {
 		var tid = node.connections[i];
 		strength += nodes[tid].size;
 	}
-	strength /= 100;
+	strength /= 180;
 	if (strength > 1) {
 		strength = 1;
 	}
@@ -109,6 +121,14 @@ function drawNode(node) {
 	ctx.beginPath();
 	ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
 	ctx.fill();
+	
+	if (selected === node.id) {
+		ctx.strokeStyle = "#f00";
+		ctx.lineWidth = 5;
+		ctx.stroke();
+		ctx.strokeStyle = "#000";
+		ctx.lineWidth = 1;
+	}
 }
 
 function bound(node) {
@@ -148,7 +168,7 @@ function update() {
 			
 			var c;
 			if (subject.connections.includes(j)) {
-				c = -(speed*1*tmass / (0.1 + dist2)); // bigger the distance the smaller the force
+				c = -(speed*10*tmass / (0.1 + dist2)); // bigger the distance the smaller the force
 			} else {
 				c = -(speed*10*tmass / (0.1 + dist2)); // bigger the distance the smaller the force
 			}
