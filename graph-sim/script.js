@@ -18,7 +18,7 @@ window.onload = function(event) {
 					cons.push(number);
 				}
 			}
-			nodes.push( { x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: 10, connections: cons } )
+			nodes.push( { x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.floor(5 + cons.length * 5), connections: cons } )
 		}
 	} else {
 		for (var i = 0; i < 64; i++) {
@@ -37,6 +37,7 @@ window.onload = function(event) {
 	var size = nodes.length;
 	for (var i = 0; i < size; i++) {
 		for (var j = 0; j < Math.floor(Math.random()*10); j++) {
+			nodes[i].size += 5;
 			nodes.push( { x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: 5, connections: [i] } )
 		}
 	}
@@ -95,6 +96,16 @@ var isRandom = true;
 var nodes = [];
 
 function drawNode(node) {
+	var strength = 0;
+	for (var i = 0; i < node.connections.length; i++) {
+		var tid = node.connections[i];
+		strength += nodes[tid].size;
+	}
+	strength /= 100;
+	if (strength > 1) {
+		strength = 1;
+	}
+	ctx.fillStyle = `hsl(0, ${strength*50}%, ${strength*50}%)`;
 	ctx.beginPath();
 	ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
 	ctx.fill();
@@ -133,12 +144,13 @@ function update() {
 			var target = nodes[j];
 			var group = 1;
 			var dist2 = mag(subject, target);
+			var tmass = target.size*target.size / 500;
 			
 			var c;
 			if (subject.connections.includes(j)) {
-				c = -(speed*1 / (0.1 + dist2)); // bigger the distance the smaller the force
+				c = -(speed*1*tmass / (0.1 + dist2)); // bigger the distance the smaller the force
 			} else {
-				c = -(speed*10 / (0.1 + dist2)); // bigger the distance the smaller the force
+				c = -(speed*10*tmass / (0.1 + dist2)); // bigger the distance the smaller the force
 			}
 			
 			dx += c*(target.x - subject.x);
