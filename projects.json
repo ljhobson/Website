@@ -79,5 +79,17 @@
     ],
     "link": "https://lhobson.com/Better Risk/",
     "image": "https://lhobson.com/images/risk.png"
-  }
+  },
+  {
+    "title": "YOLO Minecraft Bedwars Player Detection",
+    "description": "Object detection using YOLOv8",
+    "date": "2025",
+    "content": [
+      "Trained using a self-generated dataset",
+      "Once trained runs player detection live"
+    ],
+    "link": "https://github.com/ljhobson/bedwars-player-detection",
+    "image": "https://lhobson.com/images/minecraft.png"
+  },
+  	
 ]
