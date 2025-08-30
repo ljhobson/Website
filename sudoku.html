@@ -184,6 +184,13 @@ function resize() {
 	canvas.height = Math.floor(window.innerHeight);
 	onBottom = canvas.height >= canvas.width;
 	onBottom = true; // yeeeet
+	
+	var dpr = window.devicePixelRatio || 1;
+	canvas.width = Math.floor(window.innerWidth * dpr);
+	canvas.height = Math.floor(window.innerHeight * dpr);
+	canvas.style.width = `${Math.floor(window.innerWidth)}px`;
+	canvas.style.height = `${Math.floor(window.innerHeight)}px`;
+	ctx.scale(dpr, dpr);
 }
 
 function setDimensions() {
