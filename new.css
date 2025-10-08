@@ -1,15 +1,24 @@
+@font-face {
+    font-family: Gilroy;
+    src: url(Gilroy-Light.otf);
+}
+
 body {
 	font-family: Arial, sans-serif;
 	background-color: #f2f2f2;
 	color: #333333;
 	margin: 0;
 	padding: 0;
+    /* font-family: Gilroy; */
 }
+
 #header {
 	background-color: #ffffff;
 	padding: 20px;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 	position: relative;
+	
+	z-index: 1;
 }
 #header h1 {
 	margin: 0;
@@ -20,8 +29,32 @@ body {
 	max-width: 800px;
 	margin: 0 auto;
 	padding: 20px;
+	padding-left: 100px;
 	background-color: #fff5bb;
 	background-image: repeating-linear-gradient(#fff5bb 0px, #fff5bb 48px, #999955 49px);
+	
+	box-shadow: 5px 0px 30px rgba(0, 0, 0, 0.1);
+	position: relative;
+}
+#content::before {
+	content: '';
+	position: absolute;
+	left: 30px;
+	top: 50px;
+	width: 24px;
+	height: calc(100% - 100px); /* Leave padding at top and bottom */
+	background: repeating-radial-gradient(
+		circle,
+		#ddd599 0px,
+		#ddd599 5px,
+		#999 12px,
+		transparent 12px,
+		transparent 100px
+	);
+	background-repeat: repeat-y;
+	background-size: 100% 103px; /* Space between holes */
+	background-position: center top;
+	pointer-events: none;
 }
 h2 {
 	font-size: 24px;
