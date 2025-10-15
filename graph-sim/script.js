@@ -16,15 +16,15 @@ window.onload = function(event) {
 	generateNodeData();
 	
 	if (isRandom) {
-		for (var i = 0; i < 200; i++) {
+		for (var i = 0; i < 50; i++) {
 			var cons = [];
-			for (var j = 0; j < Math.floor(Math.random() * Math.random() * Math.random() * 50); j++) {
-				var number = Math.floor(Math.random() * 200);
+			for (var j = 0; j < Math.floor(Math.random() * Math.random() * Math.random() * 20); j++) {
+				var number = Math.floor(Math.random() * 50);
 				if (!cons.includes(number) && number !== i) {
 					cons.push(number);
 				}
 			}
-			nodes.push( { id:i, x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.floor(5 + cons.length * 5), connections: cons } )
+			nodes.push( { id:i, x: 2*(0.5-Math.floor(2*Math.random()))*Math.random()*Math.random()*(canvas.width/2) + canvas.width/2, y: 2*(0.5-Math.floor(2*Math.random()))*Math.random()*Math.random()*(canvas.height/2) + canvas.height/2, size: Math.floor(5 + cons.length * 5), connections: cons } )
 		}
 	} else {
 		for (var i = 0; i < 64; i++) {
@@ -40,13 +40,13 @@ window.onload = function(event) {
 		}	
 	}
 	
-//	var size = nodes.length;
-//	for (var i = 0; i < size; i++) {
-//		for (var j = 0; j < Math.floor(Math.random()*10); j++) {
-//			nodes[i].size += 5;
-//			nodes.push( { x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: 5, connections: [i] } )
-//		}
-//	}
+	var size = nodes.length;
+	for (var i = 0; i < size; i++) {
+		for (var j = 0; j < Math.floor(Math.random()*10); j++) {
+			nodes[i].size += 5;
+			nodes.push( { id:i, x: 2*(0.5-Math.floor(2*Math.random()))*Math.random()*Math.random()*(canvas.width/2) + canvas.width/2, y: 2*(0.5-Math.floor(2*Math.random()))*Math.random()*Math.random()*(canvas.height/2) + canvas.height/2, size: 5, connections: [i] } )
+		}
+	}
 	
 	makeConnectionsBidirectional(nodes);
 	update();
@@ -217,6 +217,6 @@ function update() {
 			}
 		}
 	}
-	
+	if(Math.random() < 0.2 || asdf)
 	requestAnimationFrame(update);
 }
