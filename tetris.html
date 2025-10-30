@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<head>
+	<style>
+		* {
+			margin: 0;
+			background: #000;
+		}
+		canvas {
+			background: #fff;
+			margin: auto;
+			display: block;
+			vertical-align: center;
+		}
+		div {
+			height: 100vh;
+			align-content: center;;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<canvas id="canvas"></canvas>
+	</div>
+<script>
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+var scale = 2;
+var blockScale = 16;
+
+var width = blockScale * 10;
+var height = blockScale * 20;
+window.onload = function(event) {
+	resize();
+	texture = JSON.parse(localStorage.texture);
+	colIndex = JSON.parse(localStorage.colIndex);
+	//loadTextures();
+	createBuffer();
+	window.requestAnimationFrame(update);
+}
+
+window.onresize = function(event) {
+	resize();
+}
+
+function resize() {
+	canvas.width = scale * width;
+	canvas.height = scale * height;
+}
+
+document.onkeydown = function(event) {
+	for (var i = 0; i < blockScale * blockScale; i++) {
+		buffer[i % blockScale + Math.floor(i / blockScale) * width] = texture[i];
+	}
+}
+
+var blocks = [[0, 1, 2, width+1]];
+function spawnBlock() {
+	
+
+}
+
+var colIndex = ["#fff"];
+var texture = [];
+function loadTextures() {
+	// yoinked rgb to hex function from stack overflow
+	function componentToHex(c) {
+		var hex = c.toString(16);
+		return hex.length == 1 ? "0" + hex : hex;
+	}
+	function rgbToHex(r, g, b) {
+		return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+	}
+	// ^^^
+	
+	var rgb = [];
+	var string = "";
+	for (var i = 0; i < localStorage.grass.length; i++) {
+		var char = localStorage.grass[i];
+		if ([" ", "\n"].includes(char)) {
+			if (string.length > 0) {
+				// add colour to rgb
+				if (rgb.length === 3) {
+					// add pixel
+					var col = rgbToHex(...rgb);
+					var colId;
+					if (!colIndex.includes(col)) {
+						colIndex.push(col);
+						colId = colIndex.length - 1;
+					} else {
+						colId = colIndex.indexOf(col);
+					}
+					texture.push(colId);
+					rgb = [];
+				}
+				rgb.push(Number(string));
+			}
+			string = "";
+		} else {
+			string += char;
+		}
+	}
+	// add last one
+	// add colour to rgb
+	if (rgb.length === 3) {
+		// add pixel
+		var col = rgbToHex(...rgb);
+		var colId;
+		if (!colIndex.includes(col)) {
+			colIndex.push(col);
+			colId = colIndex.length - 1;
+		} else {
+			colId = colIndex.indexOf(col);
+		}
+		texture.push(colId);
+		rgb = [];
+	}
+}
+
+var buffer = [];
+function createBuffer() {
+	for (var i = 0; i < width * height; i++) {
+		//buffer.push(texture[i % blockScale + Math.floor(i / blockScale)]);
+		buffer.push(0);
+	}
+}
+
+function getCell(i) {
+	if (i < 0) {
+		return 0;
+	}
+	if (i >= buffer.length) {
+		return 1;
+	}
+	return buffer[i];
+}
+
+function update() {
+	// update
+	for (var i = buffer.length; i >= 0; i--) {
+		if (getCell(i) && !getCell(i+width)) {
+			buffer[i+width] = getCell(i);
+			buffer[i] = 0;
+		}
+		if (getCell(i) && !getCell(i+width-1)) {
+			buffer[i+width-1] = getCell(i);
+			buffer[i] = 0;
+		}
+		if (getCell(i) && !getCell(i+width+1)) {
+			buffer[i+width+1] = getCell(i);
+			buffer[i] = 0;
+		}
+	}
+	
+	// render
+	for (var i = 0; i < buffer.length; i++) {
+		ctx.fillStyle = colIndex[buffer[i]];
+		ctx.fillRect((i % width) * scale, Math.floor(i / width) * scale, scale, scale);
+	}
+	
+	window.requestAnimationFrame(update);
+}
+
+</script>
+</body>
