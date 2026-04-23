@@ -22,7 +22,7 @@ window.onload = function(event) {
 var info = {};
 
 info.name = "Louis Hobson";
-info.description = "4th Year Software Engineering at the University of Canterbury";
+info.description = "Graduate Software Engineer from the University of Canterbury";
 info.contact = [];
 info.contact.push({text: "louishobson5@gmail.com"});
 info.contact.push({text: "(+64) 022 477 4142"});
@@ -72,9 +72,14 @@ function finishSections(projectsList) {
     title: "Experience",
     subsections: [
       {
+        title: "Internship at Intranel",
+        description: "Software Internship over the summer",
+        date: "2025 - 2026",
+        content: []
+      }, {
         title: "TuneSoc Treasurer and Secretary",
         description: "",
-        date: "2025 – now",
+        date: "2025",
         content: [
           "Organisation - Attention to Detail - Financial Analysis"
         ]
@@ -160,7 +165,7 @@ function finishSections(projectsList) {
       {
         title: "University of Canterbury",
         description: "Bachelor of Engineering (Honours) in Software Engineering",
-        date: "2022 – now",
+        date: "2022 – 2025",
         content: []
       }, {
         title: "Nelson College",
